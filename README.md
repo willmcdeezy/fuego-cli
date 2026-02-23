@@ -10,28 +10,36 @@ npm install -g @fuego/cli
 
 ## Quick Start
 
+### For Agents
+
 ```bash
-# Initialize a new Fuego wallet
-fuego init
+# Create a new Fuego wallet
+fuego create
 
-# Check your balance
-fuego balance
-
-# Send SOL
-fuego send --to <RECIPIENT> --amount 0.1
-
-# Send USDC
-fuego send --to <RECIPIENT> --amount 10 --token USDC
+# Install the main Fuego project
+fuego install
 ```
 
-## Commands
+### Commands
 
-- `fuego init` - Initialize a new Fuego wallet
-- `fuego balance` - Check wallet balance (SOL + tokens)
-- `fuego send` - Send SOL or SPL tokens
-- `fuego receive` - Show receive address + QR code
-- `fuego history` - View transaction history
-- `fuego config` - Manage configuration settings
+- `fuego create` - Create a new Fuego wallet
+  - `-f, --force` - Overwrite existing wallet
+  - `-n, --name <name>` - Name your wallet (default: "default")
+  - `-d, --directory <path>` - Custom config directory
+
+- `fuego install` - Install the main Fuego project
+  - `-p, --path <path>` - Installation path (default: `~/.openclaw/workspace/fuego`)
+
+## File Structure
+
+After running `fuego create`, your wallet files are stored in `~/.fuego/`:
+
+```
+~/.fuego/
+├── wallet.json          # Private key (minimal, 600 permissions)
+├── wallet-config.json   # Wallet metadata (name, publicKey, createdAt)
+└── config.json          # CLI settings (RPC URL, network)
+```
 
 ## Development
 
@@ -39,7 +47,7 @@ fuego send --to <RECIPIENT> --amount 10 --token USDC
 # Install dependencies
 npm install
 
-# Build
+# Build (uses npx tsc for proper TS imports)
 npm run build
 
 # Run locally
