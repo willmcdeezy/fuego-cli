@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import ora from 'ora';
 import { FuegoWallet } from '../lib/wallet.js';
-import { getConfigPath } from '../lib/config.js';
+import { getWalletPath } from '../lib/config.js';
 
 interface InitOptions {
   force?: boolean;
@@ -14,11 +14,11 @@ export async function initCommand(options: InitOptions): Promise<void> {
   const spinner = ora('Checking for existing wallet...').start();
   
   try {
-    const configPath = options.directory 
-      ? `${options.directory}/wallet.json` 
-      : getConfigPath();
+    const walletPath = options.directory 
+      ? `${options.directory}/wallet-info.json` 
+      : getWalletPath();
     
-    const wallet = new FuegoWallet(configPath);
+    const wallet = new FuegoWallet(walletPath);
     
     if (wallet.exists() && !options.force) {
       spinner.fail('Wallet already exists. Use --force to overwrite.');
@@ -42,7 +42,7 @@ export async function initCommand(options: InitOptions): Promise<void> {
       console.log(chalk.red('\nNever share this phrase with anyone!'));
     }
     
-    console.log(chalk.gray(`\n💾 Config saved to: ${configPath}`));
+    console.log(chalk.gray(`\n💾 Wallet saved to: ${walletPath}`));
     
   } catch (error) {
     spinner.fail(`Failed to create wallet: ${error.message}`);

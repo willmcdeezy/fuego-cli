@@ -4,6 +4,7 @@ import os from 'os';
 
 const CONFIG_DIR = path.join(os.homedir(), '.fuego');
 const CONFIG_FILE = path.join(CONFIG_DIR, 'config.json');
+const WALLET_FILE = path.join(CONFIG_DIR, 'wallet-info.json');
 
 interface Config {
   rpcUrl?: string;
@@ -12,8 +13,12 @@ interface Config {
   [key: string]: string | undefined;
 }
 
+export function getWalletPath(): string {
+  return WALLET_FILE;
+}
+
 export function getConfigPath(): string {
-  return path.join(CONFIG_DIR, 'wallet.json');
+  return CONFIG_FILE;
 }
 
 function loadConfig(): Config {

@@ -9,6 +9,7 @@ import {
 import fs from 'fs-extra';
 import path from 'path';
 import os from 'os';
+import { getWalletPath } from './config.js';
 
 export interface WalletBalance {
   sol: number;
@@ -35,20 +36,20 @@ export interface TransactionRecord {
 }
 
 export class FuegoWallet {
-  private configPath: string;
+  private walletPath: string;
   private keypair?: Keypair;
   
-  constructor(configPath?: string) {
-    this.configPath = configPath || path.join(os.homedir(), '.fuego', 'wallet.json');
+  constructor(walletPath?: string) {
+    this.walletPath = walletPath || getWalletPath();
   }
   
   exists(): boolean {
-    return fs.existsSync(this.configPath);
+    return fs.existsSync(this.walletPath);
   }
   
   async create(): Promise<{ publicKey: string; mnemonic?: string }> {
     // Ensure directory exists
-    await fs.ensureDir(path.dirname(this.configPath));
+    await fs.ensureDir(path.dirname(this.walletPath));
     
     // Generate new keypair
     this.keypair = Keypair.generate();
@@ -61,10 +62,10 @@ export class FuegoWallet {
       createdAt: new Date().toISOString()
     };
     
-    await fs.writeJson(this.configPath, walletData, { spaces: 2 });
+    await fs.writeJson(this.walletPath, walletData, { spaces: 2 });
     
     // Set restrictive permissions (owner read/write only)
-    await fs.chmod(this.configPath, 0o600);
+    await fs.chmod(this.walletPath, 0o600);
     
     return {
       publicKey: this.keypair.publicKey.toBase58(),
@@ -80,7 +81,7 @@ export class FuegoWallet {
       throw new Error('Wallet not found. Run "fuego init" first.');
     }
     
-    const walletData = fs.readJsonSync(this.configPath);
+    const walletData = fs.readJsonSync(this.walletPath);
     this.keypair = Keypair.fromSecretKey(Uint8Array.from(walletData.secretKey));
     
     return this.keypair;
@@ -95,7 +96,7 @@ export class FuegoWallet {
       throw new Error('Wallet not found. Run "fuego init" first.');
     }
     
-    const walletData = fs.readJsonSync(this.configPath);
+    const walletData = fs.readJsonSync(this.walletPath);
     return walletData.publicKey;
   }
   
