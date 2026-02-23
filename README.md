@@ -5,7 +5,7 @@ Command-line interface for Fuego - the sovereign Solana wallet for AI agents.
 ## Installation
 
 ```bash
-npm install -g fuego-cli
+npm install -g @fuego/cli
 ```
 
 ## Quick Start

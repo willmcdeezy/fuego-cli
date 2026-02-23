@@ -1,5 +1,5 @@
 {
-  "name": "fuego-cli",
+  "name": "@fuego/cli",
   "version": "0.1.0",
   "description": "Command-line interface for Fuego - the sovereign Solana wallet for AI agents",
   "main": "dist/index.js",
