@@ -1,0 +1,12 @@
+node_modules/
+dist/
+*.log
+.DS_Store
+.env
+.env.local
+*.key
+*.json.key
+wallet.json
+.fuego/
+coverage/
+*.tsbuildinfo
