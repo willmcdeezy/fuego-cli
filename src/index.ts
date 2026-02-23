@@ -4,8 +4,15 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import { createCommand } from './commands/create.js';
 import { installCommand } from './commands/install.js';
+import { showBanner } from './lib/ascii.js';
 
 async function main() {
+  // Show banner for help and when no args provided
+  const args = process.argv.slice(2);
+  if (args.length === 0 || args.includes('--help') || args.includes('-h')) {
+    showBanner();
+  }
+
   const program = new Command();
 
   program
@@ -27,7 +34,7 @@ async function main() {
   program
     .command('install')
     .description('Install the main Fuego project (for agents)')
-    .option('-p, --path <path>', 'Installation path (default: ~/.openclaw/workspace/fuego)')
+    .option('-p, --path <path>', 'Installation path (default: ~/.openclaw/workspace/fuego if exists, else ./fuego)')
     .action(installCommand);
 
   await program.parseAsync(process.argv);

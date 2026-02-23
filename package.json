@@ -35,10 +35,13 @@
   },
   "dependencies": {
     "@solana/web3.js": "^1.98.0",
+    "boxen": "^8.0.1",
     "chalk": "^5.4.1",
     "commander": "^13.1.0",
     "conf": "^13.1.0",
+    "figlet": "^1.8.0",
     "fs-extra": "^11.3.0",
+    "gradient-string": "^3.0.0",
     "inquirer": "^12.4.2",
     "ora": "^8.2.0"
   },

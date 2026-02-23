@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import ora from 'ora';
 import { FuegoWallet } from '../lib/wallet.js';
 import { getWalletPath } from '../lib/config.js';
+import { showSuccess, showWarning, showInfo, formatPublicKey, flameDivider } from '../lib/ascii.js';
 
 interface CreateOptions {
   force?: boolean;
@@ -10,9 +11,12 @@ interface CreateOptions {
 }
 
 export async function createCommand(options: CreateOptions): Promise<void> {
-  console.log(chalk.cyan.bold('\n🔥 Fuego Wallet Creation\n'));
+  console.log(); // spacer
   
-  const spinner = ora('Checking for existing wallet...').start();
+  const spinner = ora({
+    text: 'Checking for existing wallet...',
+    color: 'yellow'
+  }).start();
   
   try {
     const walletPath = options.directory 
@@ -22,32 +26,42 @@ export async function createCommand(options: CreateOptions): Promise<void> {
     const wallet = new FuegoWallet(walletPath);
     
     if (wallet.exists() && !options.force) {
-      spinner.fail('Wallet already exists. Use --force to overwrite.');
-      console.log(chalk.yellow('⚠️  Warning: Overwriting will destroy your current wallet!'));
+      spinner.stop();
+      showWarning('Wallet already exists.\n\nUse --force to overwrite.\n⚠️  Warning: Overwriting will destroy your current wallet!');
       return;
     }
     
     spinner.text = 'Generating new Solana keypair...';
+    spinner.color = 'red';
     
     const { publicKey, mnemonic } = await wallet.create(options.name);
     
-    spinner.succeed('Wallet created successfully!');
+    spinner.stop();
     
-    console.log(chalk.green('\n✅ Your Fuego wallet is ready'));
-    console.log(chalk.white('\n📍 Public Key:'));
-    console.log(chalk.cyan.bold(publicKey));
+    // Success display
+    showSuccess(
+      '🔥 Wallet Created Successfully!',
+      `Name: ${chalk.cyan(options.name || 'default')}\nPublic Key: ${formatPublicKey(publicKey)}`
+    );
     
     if (mnemonic) {
-      console.log(chalk.yellow('\n⚠️  IMPORTANT: Save this recovery phrase:'));
-      console.log(chalk.white(mnemonic));
-      console.log(chalk.red('\nNever share this phrase with anyone!'));
+      showWarning(
+        'IMPORTANT: Save this recovery phrase!\n' + 
+        chalk.white(mnemonic) + 
+        '\n\n' + chalk.red('Never share this phrase with anyone!')
+      );
     }
     
-    console.log(chalk.gray(`\n💾 Keypair: ~/.fuego/wallet.json`));
-    console.log(chalk.gray(`📋 Config: ~/.fuego/wallet-config.json`));
+    // File locations
+    showInfo('📁 Wallet Files', [
+      'Keypair: ~/.fuego/wallet.json',
+      'Config: ~/.fuego/wallet-config.json'
+    ]);
+    
+    flameDivider();
     
   } catch (error: any) {
-    spinner.fail(`Failed to create wallet: ${error.message}`);
+    spinner.fail(chalk.red(`Failed to create wallet: ${error.message}`));
     process.exit(1);
   }
 }
