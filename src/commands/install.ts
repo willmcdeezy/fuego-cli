@@ -12,8 +12,15 @@ interface InstallOptions {
 export async function installCommand(options: InstallOptions): Promise<void> {
   console.log(chalk.cyan.bold('\n🔥 Fuego Project Installation\n'));
   
-  // Default to openclaw workspace for agents
-  const installPath = options.path || path.join(os.homedir(), '.openclaw', 'workspace', 'fuego');
+  // Determine default path: use openclaw workspace if it exists, otherwise current directory
+  const openclawWorkspace = path.join(os.homedir(), '.openclaw', 'workspace');
+  const hasOpenclaw = fs.existsSync(openclawWorkspace);
+  
+  const defaultPath = hasOpenclaw 
+    ? path.join(openclawWorkspace, 'fuego')
+    : path.join(process.cwd(), 'fuego');
+  
+  const installPath = options.path || defaultPath;
   
   const spinner = ora('Checking installation path...').start();
   
@@ -33,14 +40,19 @@ export async function installCommand(options: InstallOptions): Promise<void> {
     
     // Clone the main Fuego repo
     const repoUrl = 'https://github.com/willmcdeezy/fuego.git';
-    execSync(`git clone ${repoUrl} ${installPath}`, { stdio: 'pipe' });
+    execSync(`git clone ${repoUrl} "${installPath}"`, { stdio: 'pipe' });
     
     spinner.succeed('Fuego installed successfully!');
     
     console.log(chalk.green('\n✅ Fuego is ready'));
     console.log(chalk.white(`\n📍 Installation: ${installPath}`));
+    
+    // Show contextual next steps
+    const relativePath = path.relative(process.cwd(), installPath);
+    const cdPath = relativePath.startsWith('..') ? installPath : relativePath;
+    
     console.log(chalk.gray('\nNext steps:'));
-    console.log(chalk.gray('  cd fuego'));
+    console.log(chalk.gray(`  cd ${cdPath.includes(' ') ? `"${cdPath}"` : cdPath}`));
     console.log(chalk.gray('  npm install'));
     console.log(chalk.gray('  npm run start'));
     
