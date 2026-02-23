@@ -3,13 +3,14 @@ import ora from 'ora';
 import { FuegoWallet } from '../lib/wallet.js';
 import { getWalletPath } from '../lib/config.js';
 
-interface InitOptions {
+interface CreateOptions {
   force?: boolean;
   directory?: string;
+  name?: string;
 }
 
-export async function initCommand(options: InitOptions): Promise<void> {
-  console.log(chalk.cyan.bold('\n🔥 Fuego Wallet Initialization\n'));
+export async function createCommand(options: CreateOptions): Promise<void> {
+  console.log(chalk.cyan.bold('\n🔥 Fuego Wallet Creation\n'));
   
   const spinner = ora('Checking for existing wallet...').start();
   
@@ -28,7 +29,7 @@ export async function initCommand(options: InitOptions): Promise<void> {
     
     spinner.text = 'Generating new Solana keypair...';
     
-    const { publicKey, mnemonic } = await wallet.create();
+    const { publicKey, mnemonic } = await wallet.create(options.name);
     
     spinner.succeed('Wallet created successfully!');
     

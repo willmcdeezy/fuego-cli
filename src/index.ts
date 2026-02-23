@@ -2,12 +2,8 @@
 
 import { Command } from 'commander';
 import chalk from 'chalk';
-import { initCommand } from './commands/init.js';
-import { balanceCommand } from './commands/balance.js';
-import { sendCommand } from './commands/send.js';
-import { receiveCommand } from './commands/receive.js';
-import { historyCommand } from './commands/history.js';
-import { configCommand } from './commands/config.js';
+import { createCommand } from './commands/create.js';
+import { installCommand } from './commands/install.js';
 
 const program = new Command();
 
@@ -20,51 +16,18 @@ program
   });
 
 program
-  .command('init')
-  .description('Initialize a new Fuego wallet')
+  .command('create')
+  .description('Create a new Fuego wallet')
   .option('-f, --force', 'Overwrite existing wallet')
   .option('-d, --directory <path>', 'Custom config directory')
-  .action(initCommand);
+  .option('-n, --name <name>', 'Wallet name', 'default')
+  .action(createCommand);
 
 program
-  .command('balance')
-  .alias('bal')
-  .description('Check wallet balance (SOL + tokens)')
-  .option('--json', 'Output as JSON')
-  .action(balanceCommand);
-
-program
-  .command('send')
-  .description('Send SOL or SPL tokens')
-  .requiredOption('-t, --to <address>', 'Recipient address')
-  .requiredOption('-a, --amount <number>', 'Amount to send')
-  .option('--token <mint>', 'Token mint (default: SOL)', 'SOL')
-  .option('--network <url>', 'Custom RPC endpoint')
-  .option('--json', 'Output as JSON')
-  .action(sendCommand);
-
-program
-  .command('receive')
-  .alias('recv')
-  .description('Show receive address and QR code')
-  .option('--qr', 'Display QR code in terminal', true)
-  .action(receiveCommand);
-
-program
-  .command('history')
-  .alias('tx')
-  .description('View transaction history')
-  .option('-l, --limit <n>', 'Number of transactions', '10')
-  .option('--json', 'Output as JSON')
-  .action(historyCommand);
-
-program
-  .command('config')
-  .description('Manage Fuego configuration')
-  .option('--get <key>', 'Get a config value')
-  .option('--set <key=value>', 'Set a config value')
-  .option('--list', 'List all config values')
-  .action(configCommand);
+  .command('install')
+  .description('Install the main Fuego project (for agents)')
+  .option('-p, --path <path>', 'Installation path (default: ~/.openclaw/workspace/fuego)')
+  .action(installCommand);
 
 // Global error handler
 program.exitOverride();

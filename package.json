@@ -8,8 +8,8 @@
     "fuego": "./dist/index.js"
   },
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
+    "build": "npx tsc",
+    "dev": "npx tsc --watch",
     "start": "node dist/index.js",
     "test": "node --test dist/**/*.test.js",
     "lint": "eslint src/**/*.ts",
