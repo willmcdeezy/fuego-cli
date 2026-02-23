@@ -15,7 +15,7 @@ export async function initCommand(options: InitOptions): Promise<void> {
   
   try {
     const walletPath = options.directory 
-      ? `${options.directory}/wallet-info.json` 
+      ? `${options.directory}/wallet.json` 
       : getWalletPath();
     
     const wallet = new FuegoWallet(walletPath);
@@ -42,7 +42,8 @@ export async function initCommand(options: InitOptions): Promise<void> {
       console.log(chalk.red('\nNever share this phrase with anyone!'));
     }
     
-    console.log(chalk.gray(`\n💾 Wallet saved to: ${walletPath}`));
+    console.log(chalk.gray(`\n💾 Keypair: ~/.fuego/wallet.json`));
+    console.log(chalk.gray(`📋 Config: ~/.fuego/wallet-config.json`));
     
   } catch (error) {
     spinner.fail(`Failed to create wallet: ${error.message}`);

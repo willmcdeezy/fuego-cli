@@ -7,6 +7,7 @@ dist/
 *.key
 *.json.key
 wallet.json
+wallet-config.json
 .fuego/
 coverage/
 *.tsbuildinfo

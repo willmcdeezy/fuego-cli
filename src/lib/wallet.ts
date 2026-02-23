@@ -8,8 +8,7 @@ import {
 } from '@solana/web3.js';
 import fs from 'fs-extra';
 import path from 'path';
-import os from 'os';
-import { getWalletPath } from './config.js';
+import { getWalletPath, getWalletConfigPath, saveWalletConfig } from './config.js';
 
 export interface WalletBalance {
   sol: number;
@@ -47,29 +46,34 @@ export class FuegoWallet {
     return fs.existsSync(this.walletPath);
   }
   
-  async create(): Promise<{ publicKey: string; mnemonic?: string }> {
+  async create(name?: string): Promise<{ publicKey: string; mnemonic?: string }> {
     // Ensure directory exists
     await fs.ensureDir(path.dirname(this.walletPath));
     
     // Generate new keypair
     this.keypair = Keypair.generate();
+    const publicKey = this.keypair.publicKey.toBase58();
     
-    // Save to file (encrypted in future versions)
+    // Save wallet.json with ONLY the keypair (minimal, secure)
     const walletData = {
-      publicKey: this.keypair.publicKey.toBase58(),
-      secretKey: Array.from(this.keypair.secretKey),
-      version: '0.1.0',
-      createdAt: new Date().toISOString()
+      secretKey: Array.from(this.keypair.secretKey)
     };
     
-    await fs.writeJson(this.walletPath, walletData, { spaces: 2 });
+    await fs.writeJson(this.walletPath, walletData);
     
     // Set restrictive permissions (owner read/write only)
     await fs.chmod(this.walletPath, 0o600);
     
+    // Save wallet-config.json with metadata (safe to modify)
+    saveWalletConfig({
+      publicKey,
+      name: name || 'default',
+      createdAt: new Date().toISOString(),
+      version: '0.1.0'
+    });
+    
     return {
-      publicKey: this.keypair.publicKey.toBase58(),
-      // Note: We're not using mnemonic phrases in v0.1 - direct keypair generation
+      publicKey,
       mnemonic: undefined
     };
   }
@@ -96,8 +100,17 @@ export class FuegoWallet {
       throw new Error('Wallet not found. Run "fuego init" first.');
     }
     
+    // Read from wallet-config.json if available, otherwise from wallet.json
+    const configPath = getWalletConfigPath();
+    if (fs.existsSync(configPath)) {
+      const config = fs.readJsonSync(configPath);
+      return config.publicKey;
+    }
+    
+    // Fallback: derive from wallet.json
     const walletData = fs.readJsonSync(this.walletPath);
-    return walletData.publicKey;
+    const kp = Keypair.fromSecretKey(Uint8Array.from(walletData.secretKey));
+    return kp.publicKey.toBase58();
   }
   
   async getBalance(): Promise<WalletBalance> {
