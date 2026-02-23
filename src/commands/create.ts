@@ -46,7 +46,7 @@ export async function createCommand(options: CreateOptions): Promise<void> {
     console.log(chalk.gray(`\n💾 Keypair: ~/.fuego/wallet.json`));
     console.log(chalk.gray(`📋 Config: ~/.fuego/wallet-config.json`));
     
-  } catch (error) {
+  } catch (error: any) {
     spinner.fail(`Failed to create wallet: ${error.message}`);
     process.exit(1);
   }

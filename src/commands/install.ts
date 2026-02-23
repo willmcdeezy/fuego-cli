@@ -44,7 +44,7 @@ export async function installCommand(options: InstallOptions): Promise<void> {
     console.log(chalk.gray('  npm install'));
     console.log(chalk.gray('  npm run start'));
     
-  } catch (error) {
+  } catch (error: any) {
     spinner.fail(`Installation failed: ${error.message}`);
     
     // Cleanup on failure

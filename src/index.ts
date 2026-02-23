@@ -34,7 +34,7 @@ program.exitOverride();
 
 try {
   await program.parseAsync(process.argv);
-} catch (error) {
+} catch (error: any) {
   if (error.code !== 'commander.helpDisplayed' && error.code !== 'commander.versionDisplayed') {
     console.error(chalk.red(`\n❌ Error: ${error.message}`));
     process.exit(1);
