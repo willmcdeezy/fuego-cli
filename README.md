@@ -190,8 +190,12 @@ fuego update --fuego
 
 Install the [Fuego project](https://github.com/willmcdeezy/fuego) — Rust server, Python scripts, and dashboard.
 
+**Auto-detection:**
+1. Checks for `~/.openclaw/workspace` first (OpenClaw agent machines)
+2. If not found, installs to `./fuego` in current directory
+
 ```bash
-# Auto-detect location
+# Auto-detect best location
 fuego install
 
 # Custom path
