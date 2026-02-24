@@ -2,28 +2,19 @@ import chalk from 'chalk';
 import { exec } from 'child_process';
 import fs from 'fs-extra';
 import path from 'path';
-import os from 'os';
 import { promisify } from 'util';
-import { showSuccess, showInfo, flameDivider } from '../lib/ascii.js';
+import { showInfo, flameDivider } from '../lib/ascii.js';
+import { findFuegoPath } from '../lib/config.js';
 
 const execAsync = promisify(exec);
 
 export async function dashboardCommand(): Promise<void> {
   console.log(); // spacer
 
-  // Find fuego installation
-  const openclawPath = path.join(os.homedir(), '.openclaw', 'workspace', 'fuego');
-  const localPath = path.join(process.cwd(), 'fuego');
-  
-  let fuegoPath: string | null = null;
-  
-  if (fs.existsSync(path.join(openclawPath, 'dashboard', 'dashboard.html'))) {
-    fuegoPath = openclawPath;
-  } else if (fs.existsSync(path.join(localPath, 'dashboard', 'dashboard.html'))) {
-    fuegoPath = localPath;
-  }
+  // Find fuego installation (checks config first, then falls back to auto-detect)
+  const fuegoPath = findFuegoPath();
 
-  if (!fuegoPath) {
+  if (!fuegoPath || !fs.existsSync(path.join(fuegoPath, 'dashboard', 'dashboard.html'))) {
     console.log(chalk.red('❌ Fuego dashboard not found.'));
     console.log(chalk.gray('\nRun "fuego install" first to install the Fuego project.'));
     process.exit(1);
@@ -34,13 +25,13 @@ export async function dashboardCommand(): Promise<void> {
   showInfo('🔥 Opening Fuego Dashboard', [
     `Location: ${chalk.cyan(dashboardPath)}`
   ]);
-  
+
   flameDivider();
 
   // Open the dashboard based on platform
   const platform = process.platform;
   let command: string;
-  
+
   switch (platform) {
     case 'darwin': // macOS
       command = `open "${dashboardPath}"`;

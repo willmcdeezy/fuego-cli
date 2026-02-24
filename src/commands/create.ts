@@ -37,17 +37,23 @@ export async function createCommand(options: CreateOptions): Promise<void> {
     
     const { publicKey, mnemonic } = await wallet.create(options.name);
     
-    // Create config.json with defaults
+    // Create or update config.json
     const configPath = options.directory 
       ? `${options.directory}/config.json` 
       : getConfigPath();
     
-    if (!fs.existsSync(configPath)) {
-      fs.writeJsonSync(configPath, {
-        network: 'mainnet',
-        rpcUrl: 'https://api.mainnet-beta.solana.com'
-      }, { spaces: 2 });
+    // Load existing config if it exists (from install command)
+    let existingConfig: any = {};
+    if (fs.existsSync(configPath)) {
+      existingConfig = fs.readJsonSync(configPath);
     }
+    
+    // Merge with defaults, preserving fuego install info
+    fs.writeJsonSync(configPath, {
+      ...existingConfig,
+      network: existingConfig.network || 'mainnet',
+      rpcUrl: existingConfig.rpcUrl || 'https://api.mainnet-beta.solana.com'
+    }, { spaces: 2 });
     
     // Store fuego-cli version
     setFuegoCliVersion(getFuegoCliVersion());

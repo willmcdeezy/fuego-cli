@@ -2,23 +2,14 @@ import chalk from 'chalk';
 import { spawn } from 'child_process';
 import fs from 'fs-extra';
 import path from 'path';
-import os from 'os';
 import { showInfo, flameDivider } from '../lib/ascii.js';
+import { findFuegoPath } from '../lib/config.js';
 
 export async function serveCommand(): Promise<void> {
   console.log(); // spacer
 
-  // Find fuego installation
-  const openclawPath = path.join(os.homedir(), '.openclaw', 'workspace', 'fuego');
-  const localPath = path.join(process.cwd(), 'fuego');
-  
-  let fuegoPath: string | null = null;
-  
-  if (fs.existsSync(path.join(openclawPath, 'server'))) {
-    fuegoPath = openclawPath;
-  } else if (fs.existsSync(path.join(localPath, 'server'))) {
-    fuegoPath = localPath;
-  }
+  // Find fuego installation (checks config first, then falls back to auto-detect)
+  const fuegoPath = findFuegoPath();
 
   if (!fuegoPath) {
     console.log(chalk.red('❌ Fuego server not found.'));

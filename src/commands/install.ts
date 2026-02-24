@@ -4,7 +4,7 @@ import { execSync } from 'child_process';
 import fs from 'fs-extra';
 import path from 'path';
 import os from 'os';
-import { setFuegoVersion } from '../lib/config.js';
+import { setFuegoVersion, getConfigPath } from '../lib/config.js';
 import { showSuccess, showWarning, showInfo, flameDivider } from '../lib/ascii.js';
 
 interface InstallOptions {
@@ -43,6 +43,10 @@ export async function installCommand(options: InstallOptions): Promise<void> {
     spinner.color = 'cyan';
     await fs.ensureDir(path.dirname(installPath));
     
+    // Ensure .fuego config directory exists (even if create hasn't run yet)
+    const fuegoDir = path.join(os.homedir(), '.fuego');
+    await fs.ensureDir(fuegoDir);
+    
     spinner.text = 'Cloning Fuego repository...';
     spinner.color = 'red';
     
@@ -57,7 +61,7 @@ export async function installCommand(options: InstallOptions): Promise<void> {
       cwd: installPath 
     }).toString().trim();
     
-    // Store version info
+    // Store version info with install path
     setFuegoVersion(commitHash, installPath);
     
     // Show contextual next steps
