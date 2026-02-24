@@ -1,13 +1,9 @@
 import chalk from 'chalk';
-import { Connection, PublicKey, LAMPORTS_PER_SOL } from '@solana/web3.js';
-import splToken from '@solana/spl-token';
 import { loadWalletConfig } from '../lib/config.js';
 import { showInfo, formatPublicKey, flameDivider } from '../lib/ascii.js';
 import ora from 'ora';
 
-// Token mint addresses
-const USDC_MINT = new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v');
-const USDT_MINT = new PublicKey('Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenEqw');
+const FUEGO_SERVER_URL = 'http://127.0.0.1:8080';
 
 export async function balanceCommand(): Promise<void> {
   console.log(); // spacer
@@ -19,42 +15,43 @@ export async function balanceCommand(): Promise<void> {
     process.exit(1);
   }
 
-  const spinner = ora('Fetching balances...').start();
+  const spinner = ora('Fetching balances from Fuego server...').start();
 
   try {
-    const connection = new Connection('https://api.mainnet-beta.solana.com', 'confirmed');
-    const publicKey = new PublicKey(config.publicKey);
+    const publicKey = config.publicKey;
+    const network = 'mainnet-beta';
 
-    // Get SOL balance
-    const solBalanceLamports = await connection.getBalance(publicKey);
-    const solBalance = solBalanceLamports / LAMPORTS_PER_SOL;
+    // Query SOL balance
+    const solResponse = await fetch(`${FUEGO_SERVER_URL}/balance`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ network, address: publicKey })
+    });
+    const solData = await solResponse.json();
+    const solBalance = solData.success ? solData.data.sol : 0;
 
-    // Get USDC balance
-    const usdcAta = await splToken.getAssociatedTokenAddress(USDC_MINT, publicKey);
-    let usdcBalance = 0;
-    try {
-      const usdcAccount = await connection.getTokenAccountBalance(usdcAta);
-      usdcBalance = usdcAccount.value.uiAmount || 0;
-    } catch {
-      // Account doesn't exist = 0 balance
-      usdcBalance = 0;
-    }
+    // Query USDC balance
+    const usdcResponse = await fetch(`${FUEGO_SERVER_URL}/usdc-balance`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ network, address: publicKey })
+    });
+    const usdcData = await usdcResponse.json();
+    const usdcBalance = usdcData.success ? parseFloat(usdcData.data.ui_amount) : 0;
 
-    // Get USDT balance
-    const usdtAta = await splToken.getAssociatedTokenAddress(USDT_MINT, publicKey);
-    let usdtBalance = 0;
-    try {
-      const usdtAccount = await connection.getTokenAccountBalance(usdtAta);
-      usdtBalance = usdtAccount.value.uiAmount || 0;
-    } catch {
-      // Account doesn't exist = 0 balance
-      usdtBalance = 0;
-    }
+    // Query USDT balance
+    const usdtResponse = await fetch(`${FUEGO_SERVER_URL}/usdt-balance`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ network, address: publicKey })
+    });
+    const usdtData = await usdtResponse.json();
+    const usdtBalance = usdtData.success ? parseFloat(usdtData.data.ui_amount) : 0;
 
     spinner.stop();
 
     showInfo('💰 Your Balances', [
-      `Address: ${formatPublicKey(config.publicKey)}`,
+      `Address: ${formatPublicKey(publicKey)}`,
       '',
       `${chalk.yellow('- SOL:')}     ${chalk.white(solBalance.toFixed(9))}`,
       `${chalk.green('- USDC:')}   ${chalk.white('$' + usdcBalance.toFixed(2))}`,
@@ -65,6 +62,7 @@ export async function balanceCommand(): Promise<void> {
   } catch (error) {
     spinner.stop();
     console.log(chalk.red(`\n❌ Failed to fetch balances: ${error instanceof Error ? error.message : 'Unknown error'}`));
+    console.log(chalk.gray('\nMake sure the Fuego server is running: cd fuego/server && cargo run'));
     process.exit(1);
   }
 }
