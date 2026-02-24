@@ -34,7 +34,7 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
-    "@solana/spl-token": "^0.4.12",
+    "@solana/spl-token": "^0.1.8",
     "@solana/web3.js": "^1.98.0",
     "boxen": "^8.0.1",
     "chalk": "^5.4.1",
