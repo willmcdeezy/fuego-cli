@@ -10,9 +10,27 @@
 ██║     ╚██████╔╝███████╗╚██████╔╝╚██████╔╝ 
 ╚═╝      ╚═════╝ ╚══════╝ ╚═════╝  ╚═════╝ 
   </pre>
-  <h3>🔥🦞 Agentic Solana Wallet 🦞🔥</h3>
-  <p>Zero friction. Maximum agent autonomy.</p>
+  <h3>🔥🦞 Agentic Solana Wallet CLI 🦞🔥</h3>
+  <p><strong>Zero friction. Maximum agent autonomy.</strong></p>
+  
+  <p>
+    <a href="https://www.npmjs.com/package/fuego-cli"><img src="https://img.shields.io/npm/v/fuego-cli.svg?style=flat-square" alt="npm version"></a>
+    <a href="https://github.com/willmcdeezy/fuego-cli/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square" alt="License"></a>
+  </p>
 </div>
+
+---
+
+## Why Fuego?
+
+**The first Solana wallet CLI designed FOR autonomous agents.**
+
+- ⚡ **No passwords** — File permissions = real security
+- 🤖 **Agent-first** — Built for automated workflows
+- 🏠 **Local-only** — Keys never leave your machine
+- 🔄 **Auto-updating** — Stay current with `fuego update`
+
+---
 
 ## Installation
 
@@ -20,60 +38,78 @@
 npm install -g fuego-cli
 ```
 
+---
+
 ## Quick Start
 
 ```bash
-# See the fire banner and help
-fuego --help
+# 1. Create a wallet
+fuego create
 
-# Create a new Fuego wallet
-fuego create --name my-wallet
-
-# Check your balances
-fuego balance
-
-# Install the main Fuego project
+# 2. Install the Fuego server & tools
 fuego install
 
-# Start the server
+# 3. Start the server
 fuego serve
 
-# Open the dashboard (in another terminal)
-fuego dashboard
+# 4. Check your balance
+fuego balance
 
-# Update to latest versions
-fuego update
+# 5. Open the dashboard
+fuego dashboard
 ```
+
+---
 
 ## Commands
 
+### Wallet Management
+
+| Command | Description |
+|---------|-------------|
+| `fuego create` | Create a new Solana wallet |
+| `fuego address` | Show your wallet address |
+| `fuego balance` | Check SOL, USDC, USDT balances |
+
+### Project Management
+
+| Command | Description |
+|---------|-------------|
+| `fuego install` | Install the [Fuego server & tools](https://github.com/willmcdeezy/fuego) |
+| `fuego serve` | Start the Rust server (`cargo run`) |
+| `fuego dashboard` | Open the HTML dashboard |
+| `fuego update` | Update CLI and/or Fuego project |
+
+---
+
+## Detailed Usage
+
 ### `fuego create [options]`
 
-Create a new Fuego wallet with style.
+Create a new Fuego wallet with zero passwords.
 
-**Options:**
-- `-f, --force` - Overwrite existing wallet
-- `-n, --name <name>` - Name your wallet (default: "default")
-- `-d, --directory <path>` - Custom config directory
-
-**Example:**
 ```bash
 fuego create --name prod-wallet
 ```
 
-Creates:
+**Options:**
+- `-f, --force` — Overwrite existing wallet
+- `-n, --name <name>` — Wallet name (default: "default")
+
+**Creates:**
 ```
 ~/.fuego/
-├── wallet.json          # Private key (minimal, 600 permissions)
-├── wallet-config.json   # Wallet metadata (name, publicKey, createdAt)
-└── config.json          # CLI settings (RPC URL, network)
+├── wallet.json          # Private key (600 permissions)
+├── wallet-config.json   # Public key + metadata
+└── config.json          # CLI config with versions
 ```
+
+---
 
 ### `fuego balance`
 
-Check your wallet balances (SOL, USDC, USDT) on mainnet.
+Check balances via the Fuego server.
 
-**Example:**
 ```bash
 fuego balance
 # or
@@ -91,53 +127,38 @@ Address: DmFy...eUZF
 - USDT:   $0.00
 ```
 
+---
+
 ### `fuego serve`
 
-Start the Fuego Rust server (runs `cargo run` in the server directory).
+Start the Fuego Rust server.
 
-**Example:**
 ```bash
 fuego serve
 ```
 
-**Auto-detects Fuego installation:**
-- Checks `~/.openclaw/workspace/fuego` first (agent machines)
-- Falls back to `./fuego` (local installs)
+Auto-detects installation at:
+- `~/.openclaw/workspace/fuego` (OpenClaw agents)
+- `./fuego` (local installs)
 
-**Output:**
-```
-🔥 Starting Fuego Server
-
-Location: ~/.openclaw/workspace/fuego/server
-Command: cargo run
-
-Server will be available at:
-http://127.0.0.1:8080
-```
+---
 
 ### `fuego dashboard`
 
-Open the Fuego dashboard in your default browser.
+Open the dashboard in your default browser.
 
-**Alias:** `fuego dash`
-
-**Example:**
 ```bash
 fuego dashboard
+# or
+fuego dash
 ```
 
-**Note:** Make sure the Fuego server is running (`fuego serve`) for the dashboard to work properly.
+---
 
 ### `fuego update [options]`
 
-Update fuego-cli and/or fuego to the latest versions.
+Update everything with one command.
 
-**Options:**
-- `--cli` - Update only fuego-cli
-- `--fuego` - Update only the fuego project
-- No flags - Update both
-
-**Examples:**
 ```bash
 # Update both
 fuego update
@@ -145,85 +166,100 @@ fuego update
 # Update only CLI
 fuego update --cli
 
-# Update only fuego project
+# Update only Fuego project
 fuego update --fuego
 ```
 
-**Output:**
+**Tracks versions in `~/.fuego/config.json`:**
+```json
+{
+  "fuego-cli": {
+    "version": "0.1.0",
+    "lastUpdated": "2026-02-24T18:30:00.000Z"
+  },
+  "fuego": {
+    "version": "a1b2c3d",
+    "lastUpdated": "2026-02-24T18:35:00.000Z"
+  }
+}
 ```
-📦 Current Versions
 
-fuego-cli: 0.1.0 (updated: 2/24/2026)
-fuego: a1b2c3d (updated: 2/24/2026)
-
-✅ fuego-cli updated!
-Version: 0.1.0
-
-✅ fuego updated!
-Version: e5f6g7h
-📍 Location: ~/.openclaw/workspace/fuego
-
-📝 Note: You may need to rebuild the server:
-  cd ~/.openclaw/workspace/fuego/server && cargo build
-```
+---
 
 ### `fuego install [options]`
 
-Install the main [Fuego project](https://github.com/willmcdeezy/fuego) — the Rust server, Python scripts, and HTML dashboard for agent-ready Solana transactions.
+Install the [Fuego project](https://github.com/willmcdeezy/fuego) — Rust server, Python scripts, and dashboard.
 
-**Options:**
-- `-p, --path <path>` - Installation path
-
-**Smart defaults:**
-- If `~/.openclaw/workspace` exists → installs there (agent machine)
-- Otherwise → installs to `./fuego` (like create-react-app)
-
-**Example:**
 ```bash
-# Auto-detect best location
+# Auto-detect location
 fuego install
 
 # Custom path
 fuego install --path ~/projects/my-fuego
 ```
 
-## Features
+---
 
-- 🔥 **Fire-themed UI** — ASCII art, gradient colors, boxed messages
-- 🤖 **Agent-aware** — Auto-detects OpenClaw workspace
-- 🛡️ **Sovereign** — Your keys, your control
-- 📦 **Zero-conf** — Sensible defaults, works out of the box
+## Architecture
+
+```
+┌─────────────────┐
+│   fuego-cli     │  ← This package (wallet + commands)
+│  (Node.js/npm)  │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│   ~/.fuego/     │  ← Wallet storage
+│   wallet.json   │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  Fuego Server   │  ← Rust server (separate repo)
+│  (cargo run)    │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  Solana Network │  ← mainnet/devnet
+└─────────────────┘
+```
+
+---
 
 ## Development
 
 ```bash
-# Clone and setup
 git clone https://github.com/willmcdeezy/fuego-cli.git
 cd fuego-cli
 npm install
-
-# Build (uses npx tsc)
 npm run build
-
-# Test locally
-npm start -- --help
-npm start create --name test
-
-# Link for global testing
-npm link
-fuego --help
+npm link  # Global testing
 ```
-
-## Security
-
-- Private keys stored with `0o600` permissions (owner read/write only)
-- Wallet data separated from configuration
-- Local-first — no cloud services, no hosted wallets
-
-## License
-
-MIT
 
 ---
 
-Built with 🔥 for the agent economy.
+## Security
+
+- ✅ Private keys: `chmod 600` (owner only)
+- ✅ Local-first: No cloud, no hosted wallets
+- ✅ Separate concerns: CLI vs server vs wallet
+
+---
+
+## Related Projects
+
+- 🔥 [fuego](https://github.com/willmcdeezy/fuego) — Rust server, Python scripts, dashboard
+
+---
+
+## License
+
+MIT © Will McDeezy
+
+---
+
+<div align="center">
+  <sub>Built with 🔥 for the agent economy</sub>
+</div>
