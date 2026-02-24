@@ -6,6 +6,8 @@ import { createCommand } from './commands/create.js';
 import { installCommand } from './commands/install.js';
 import { addressCommand } from './commands/address.js';
 import { balanceCommand } from './commands/balance.js';
+import { serveCommand } from './commands/serve.js';
+import { dashboardCommand } from './commands/dashboard.js';
 import { showBanner } from './lib/ascii.js';
 
 async function main() {
@@ -50,6 +52,17 @@ async function main() {
     .alias('bal')
     .description('Show your wallet balances (SOL, USDC, USDT)')
     .action(balanceCommand);
+
+  program
+    .command('serve')
+    .description('Start the Fuego Rust server (runs cargo run in server directory)')
+    .action(serveCommand);
+
+  program
+    .command('dashboard')
+    .alias('dash')
+    .description('Open the Fuego dashboard in your browser')
+    .action(dashboardCommand);
 
   await program.parseAsync(process.argv);
 }

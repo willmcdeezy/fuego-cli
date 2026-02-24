@@ -34,6 +34,12 @@ fuego balance
 
 # Install the main Fuego project
 fuego install
+
+# Start the server
+fuego serve
+
+# Open the dashboard (in another terminal)
+fuego dashboard
 ```
 
 ## Commands
@@ -81,6 +87,43 @@ Address: DmFy...eUZF
 - USDC:   $0.00
 - USDT:   $0.00
 ```
+
+### `fuego serve`
+
+Start the Fuego Rust server (runs `cargo run` in the server directory).
+
+**Example:**
+```bash
+fuego serve
+```
+
+**Auto-detects Fuego installation:**
+- Checks `~/.openclaw/workspace/fuego` first (agent machines)
+- Falls back to `./fuego` (local installs)
+
+**Output:**
+```
+🔥 Starting Fuego Server
+
+Location: ~/.openclaw/workspace/fuego/server
+Command: cargo run
+
+Server will be available at:
+http://127.0.0.1:8080
+```
+
+### `fuego dashboard`
+
+Open the Fuego dashboard in your default browser.
+
+**Alias:** `fuego dash`
+
+**Example:**
+```bash
+fuego dashboard
+```
+
+**Note:** Make sure the Fuego server is running (`fuego serve`) for the dashboard to work properly.
 
 ### `fuego install [options]`
 
