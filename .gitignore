@@ -11,3 +11,4 @@ wallet-config.json
 .fuego/
 coverage/
 *.tsbuildinfo
+package-lock.json
