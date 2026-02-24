@@ -29,6 +29,9 @@ fuego --help
 # Create a new Fuego wallet
 fuego create --name my-wallet
 
+# Check your balances
+fuego balance
+
 # Install the main Fuego project
 fuego install
 ```
@@ -57,9 +60,31 @@ Creates:
 └── config.json          # CLI settings (RPC URL, network)
 ```
 
+### `fuego balance`
+
+Check your wallet balances (SOL, USDC, USDT) on mainnet.
+
+**Example:**
+```bash
+fuego balance
+# or
+fuego bal
+```
+
+**Output:**
+```
+💰 Your Balances
+
+Address: DmFy...eUZF
+
+- SOL:     1.234567890
+- USDC:   $0.00
+- USDT:   $0.00
+```
+
 ### `fuego install [options]`
 
-Install the main Fuego project.
+Install the main [Fuego project](https://github.com/willmcdeezy/fuego) — the Rust server, Python scripts, and HTML dashboard for agent-ready Solana transactions.
 
 **Options:**
 - `-p, --path <path>` - Installation path
