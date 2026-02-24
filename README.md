@@ -192,7 +192,9 @@ Install the [Fuego project](https://github.com/willmcdeezy/fuego) — Rust serve
 
 **Auto-detection:**
 1. Checks for `~/.openclaw/workspace` first (OpenClaw agent machines)
-2. If not found, installs to `./fuego` in current directory
+2. If not found, creates `./fuego` in your **current directory**
+
+> **Note:** This installs the Fuego server to `./fuego/` (or your custom path), not to `~/.fuego/`. The `~/.fuego/` folder is only for your wallet files and CLI config.
 
 ```bash
 # Auto-detect best location
