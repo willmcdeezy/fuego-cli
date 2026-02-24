@@ -4,6 +4,7 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import { createCommand } from './commands/create.js';
 import { installCommand } from './commands/install.js';
+import { addressCommand } from './commands/address.js';
 import { showBanner } from './lib/ascii.js';
 
 async function main() {
@@ -36,6 +37,12 @@ async function main() {
     .description('Install the main Fuego project (for agents)')
     .option('-p, --path <path>', 'Installation path (default: ~/.openclaw/workspace/fuego if exists, else ./fuego)')
     .action(installCommand);
+
+  program
+    .command('address')
+    .alias('addr')
+    .description('Show your wallet address')
+    .action(addressCommand);
 
   await program.parseAsync(process.argv);
 }

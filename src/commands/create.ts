@@ -1,8 +1,9 @@
 import chalk from 'chalk';
 import ora from 'ora';
 import { FuegoWallet } from '../lib/wallet.js';
-import { getWalletPath } from '../lib/config.js';
+import { getWalletPath, getConfigPath } from '../lib/config.js';
 import { showSuccess, showWarning, showInfo, formatPublicKey, flameDivider } from '../lib/ascii.js';
+import fs from 'fs-extra';
 
 interface CreateOptions {
   force?: boolean;
@@ -35,6 +36,19 @@ export async function createCommand(options: CreateOptions): Promise<void> {
     spinner.color = 'red';
     
     const { publicKey, mnemonic } = await wallet.create(options.name);
+    
+    // Create config.json with defaults
+    const configPath = options.directory 
+      ? `${options.directory}/config.json` 
+      : getConfigPath();
+    
+    if (!fs.existsSync(configPath)) {
+      fs.writeJsonSync(configPath, {
+        network: 'mainnet',
+        rpcUrl: 'https://api.mainnet-beta.solana.com',
+        version: '0.1.0'
+      }, { spaces: 2 });
+    }
     
     spinner.stop();
     
