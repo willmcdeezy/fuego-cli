@@ -4,6 +4,7 @@ import { execSync } from 'child_process';
 import fs from 'fs-extra';
 import path from 'path';
 import os from 'os';
+import { setFuegoVersion } from '../lib/config.js';
 import { showSuccess, showWarning, showInfo, flameDivider } from '../lib/ascii.js';
 
 interface InstallOptions {
@@ -51,6 +52,14 @@ export async function installCommand(options: InstallOptions): Promise<void> {
     
     spinner.stop();
     
+    // Get the commit hash as version
+    const commitHash = execSync('git rev-parse --short HEAD', { 
+      cwd: installPath 
+    }).toString().trim();
+    
+    // Store version info
+    setFuegoVersion(commitHash, installPath);
+    
     // Show contextual next steps
     const relativePath = path.relative(process.cwd(), installPath);
     const cdPath = relativePath.startsWith('..') ? installPath : relativePath;
@@ -58,7 +67,7 @@ export async function installCommand(options: InstallOptions): Promise<void> {
     
     showSuccess(
       '🔥 Fuego Installed Successfully!',
-      `Location: ${chalk.cyan(installPath)}`
+      `Location: ${chalk.cyan(installPath)}\nVersion: ${chalk.cyan(commitHash)}`
     );
     
     showInfo('🚀 Next Steps', [

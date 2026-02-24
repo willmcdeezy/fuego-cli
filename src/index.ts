@@ -8,6 +8,7 @@ import { addressCommand } from './commands/address.js';
 import { balanceCommand } from './commands/balance.js';
 import { serveCommand } from './commands/serve.js';
 import { dashboardCommand } from './commands/dashboard.js';
+import { updateCommand } from './commands/update.js';
 import { showBanner } from './lib/ascii.js';
 
 async function main() {
@@ -63,6 +64,13 @@ async function main() {
     .alias('dash')
     .description('Open the Fuego dashboard in your browser')
     .action(dashboardCommand);
+
+  program
+    .command('update')
+    .description('Update fuego-cli and/or fuego to latest versions')
+    .option('--cli', 'Update only fuego-cli')
+    .option('--fuego', 'Update only the fuego project')
+    .action(updateCommand);
 
   await program.parseAsync(process.argv);
 }

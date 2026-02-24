@@ -40,6 +40,9 @@ fuego serve
 
 # Open the dashboard (in another terminal)
 fuego dashboard
+
+# Update to latest versions
+fuego update
 ```
 
 ## Commands
@@ -124,6 +127,45 @@ fuego dashboard
 ```
 
 **Note:** Make sure the Fuego server is running (`fuego serve`) for the dashboard to work properly.
+
+### `fuego update [options]`
+
+Update fuego-cli and/or fuego to the latest versions.
+
+**Options:**
+- `--cli` - Update only fuego-cli
+- `--fuego` - Update only the fuego project
+- No flags - Update both
+
+**Examples:**
+```bash
+# Update both
+fuego update
+
+# Update only CLI
+fuego update --cli
+
+# Update only fuego project
+fuego update --fuego
+```
+
+**Output:**
+```
+📦 Current Versions
+
+fuego-cli: 0.1.0 (updated: 2/24/2026)
+fuego: a1b2c3d (updated: 2/24/2026)
+
+✅ fuego-cli updated!
+Version: 0.1.0
+
+✅ fuego updated!
+Version: e5f6g7h
+📍 Location: ~/.openclaw/workspace/fuego
+
+📝 Note: You may need to rebuild the server:
+  cd ~/.openclaw/workspace/fuego/server && cargo build
+```
 
 ### `fuego install [options]`
 
