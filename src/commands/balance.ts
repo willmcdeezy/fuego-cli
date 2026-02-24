@@ -5,6 +5,20 @@ import ora from 'ora';
 
 const FUEGO_SERVER_URL = 'http://127.0.0.1:8080';
 
+interface BalanceResponse {
+  success: boolean;
+  data?: {
+    sol: number;
+  };
+}
+
+interface TokenBalanceResponse {
+  success: boolean;
+  data?: {
+    ui_amount: string;
+  };
+}
+
 export async function balanceCommand(): Promise<void> {
   console.log(); // spacer
 
@@ -27,8 +41,8 @@ export async function balanceCommand(): Promise<void> {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ network, address: publicKey })
     });
-    const solData = await solResponse.json();
-    const solBalance = solData.success ? solData.data.sol : 0;
+    const solData = await solResponse.json() as BalanceResponse;
+    const solBalance = solData.success ? solData.data!.sol : 0;
 
     // Query USDC balance
     const usdcResponse = await fetch(`${FUEGO_SERVER_URL}/usdc-balance`, {
@@ -36,8 +50,8 @@ export async function balanceCommand(): Promise<void> {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ network, address: publicKey })
     });
-    const usdcData = await usdcResponse.json();
-    const usdcBalance = usdcData.success ? parseFloat(usdcData.data.ui_amount) : 0;
+    const usdcData = await usdcResponse.json() as TokenBalanceResponse;
+    const usdcBalance = usdcData.success ? parseFloat(usdcData.data!.ui_amount) : 0;
 
     // Query USDT balance
     const usdtResponse = await fetch(`${FUEGO_SERVER_URL}/usdt-balance`, {
@@ -45,8 +59,8 @@ export async function balanceCommand(): Promise<void> {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ network, address: publicKey })
     });
-    const usdtData = await usdtResponse.json();
-    const usdtBalance = usdtData.success ? parseFloat(usdtData.data.ui_amount) : 0;
+    const usdtData = await usdtResponse.json() as TokenBalanceResponse;
+    const usdtBalance = usdtData.success ? parseFloat(usdtData.data!.ui_amount) : 0;
 
     spinner.stop();
 
