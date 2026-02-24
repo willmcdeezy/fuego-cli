@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import { Connection, PublicKey, LAMPORTS_PER_SOL } from '@solana/web3.js';
-import { getAssociatedTokenAddress, TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import splToken from '@solana/spl-token';
 import { loadWalletConfig } from '../lib/config.js';
 import { showInfo, formatPublicKey, flameDivider } from '../lib/ascii.js';
 import ora from 'ora';
@@ -30,7 +30,7 @@ export async function balanceCommand(): Promise<void> {
     const solBalance = solBalanceLamports / LAMPORTS_PER_SOL;
 
     // Get USDC balance
-    const usdcAta = await getAssociatedTokenAddress(USDC_MINT, publicKey);
+    const usdcAta = await splToken.getAssociatedTokenAddress(USDC_MINT, publicKey);
     let usdcBalance = 0;
     try {
       const usdcAccount = await connection.getTokenAccountBalance(usdcAta);
@@ -41,7 +41,7 @@ export async function balanceCommand(): Promise<void> {
     }
 
     // Get USDT balance
-    const usdtAta = await getAssociatedTokenAddress(USDT_MINT, publicKey);
+    const usdtAta = await splToken.getAssociatedTokenAddress(USDT_MINT, publicKey);
     let usdtBalance = 0;
     try {
       const usdtAccount = await connection.getTokenAccountBalance(usdtAta);
