@@ -5,6 +5,7 @@ import chalk from 'chalk';
 import { createCommand } from './commands/create.js';
 import { installCommand } from './commands/install.js';
 import { addressCommand } from './commands/address.js';
+import { balanceCommand } from './commands/balance.js';
 import { showBanner } from './lib/ascii.js';
 
 async function main() {
@@ -43,6 +44,12 @@ async function main() {
     .alias('addr')
     .description('Show your wallet address')
     .action(addressCommand);
+
+  program
+    .command('balance')
+    .alias('bal')
+    .description('Show your wallet balances (SOL, USDC, USDT)')
+    .action(balanceCommand);
 
   await program.parseAsync(process.argv);
 }
