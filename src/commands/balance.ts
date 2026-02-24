@@ -56,9 +56,9 @@ export async function balanceCommand(): Promise<void> {
     showInfo('💰 Your Balances', [
       `Address: ${formatPublicKey(config.publicKey)}`,
       '',
-      `${chalk.yellow('◎ SOL:')}     ${chalk.white(solBalance.toFixed(9))}`,
-      `${chalk.green('◈ USDC:')}   ${chalk.white('$' + usdcBalance.toFixed(2))}`,
-      `${chalk.cyan('◈ USDT:')}   ${chalk.white('$' + usdtBalance.toFixed(2))}`,
+      `${chalk.yellow('- SOL:')}     ${chalk.white(solBalance.toFixed(9))}`,
+      `${chalk.green('- USDC:')}   ${chalk.white('$' + usdcBalance.toFixed(2))}`,
+      `${chalk.cyan('- USDT:')}   ${chalk.white('$' + usdtBalance.toFixed(2))}`,
     ]);
 
     flameDivider();
