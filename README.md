@@ -1,13 +1,23 @@
-# 🔥 @fuego/cli
+# 🔥 fuego-cli
 
-Command-line interface for Fuego - the sovereign Solana wallet for AI agents.
-
-![Fuego Banner](https://raw.githubusercontent.com/willmcdeezy/fuego-cli/main/assets/banner.png)
+<div align="center">
+  
+<pre>
+███████╗██╗   ██╗███████╗ ██████╗  ██████╗ 
+██╔════╝██║   ██║██╔════╝██╔════╝ ██╔═══██╗
+█████╗  ██║   ██║█████╗  ██║  ███╗██║   ██║
+██╔══╝  ██║   ██║██╔══╝  ██║   ██║██║   ██║
+██║     ╚██████╔╝███████╗╚██████╔╝╚██████╔╝ 
+╚═╝      ╚═════╝ ╚══════╝ ╚═════╝  ╚═════╝ 
+  </pre>
+  <h3>🔥🦞 Agentic Solana Wallet 🦞🔥</h3>
+  <p>Zero friction. Maximum agent autonomy.</p>
+</div>
 
 ## Installation
 
 ```bash
-npm install -g @fuego/cli
+npm install -g fuego-cli
 ```
 
 ## Quick Start
