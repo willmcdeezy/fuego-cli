@@ -25,7 +25,7 @@
 
 **The first Solana wallet CLI designed FOR autonomous agents.**
 
-- ⚡ **No passwords** — File permissions = real security
+- ⚡ **Zero friction** — No prompts, no waiting, just instant signing
 - 🤖 **Agent-first** — Built for automated workflows
 - 🏠 **Local-only** — Keys never leave your machine
 - 🔄 **Auto-updating** — Stay current with `fuego update`
@@ -70,6 +70,8 @@ fuego dashboard
 | `fuego create` | Create a new Solana wallet |
 | `fuego address` | Show your wallet address |
 | `fuego balance` | Check SOL, USDC, USDT balances |
+| `fuego addrpc` | Configure your Solana RPC endpoint |
+| `fuego addbook` | Manage your address book |
 
 ### Project Management
 
@@ -101,7 +103,9 @@ fuego create --name prod-wallet
 ~/.fuego/
 ├── wallet.json          # Private key (600 permissions)
 ├── wallet-config.json   # Public key + metadata
-└── config.json          # CLI config with versions
+├── config.json          # CLI config with versions
+└── contacts/
+    └── address-book.json  # Your saved contacts
 ```
 
 ---
@@ -183,6 +187,55 @@ fuego update --fuego
   }
 }
 ```
+
+---
+
+### `fuego addrpc [options]`
+
+Configure your Solana RPC endpoint for faster or more reliable connections.
+
+```bash
+# Show current RPC configuration
+fuego addrpc
+
+# Set a custom RPC endpoint
+fuego addrpc --url https://helius.xyz/... --network mainnet
+
+# Use public mainnet
+fuego addrpc --url https://api.mainnet-beta.solana.com
+```
+
+**Options:**
+- `-u, --url <url>` — RPC endpoint URL
+- `-n, --network <network>` — Network type: `mainnet`, `devnet`, `testnet` (default: `mainnet`)
+
+---
+
+### `fuego addbook <subcommand>`
+
+Manage your address book for quick access to frequently used addresses.
+
+```bash
+# Add a contact
+fuego addbook add melanie GvCoHGGBR97Yphzc6SrRycZyS31oUYBM8m9hLRtJT7r5 --label "Melanie's wallet"
+
+# List all contacts
+fuego addbook list
+
+# Show specific contact
+fuego addbook show melanie
+
+# Remove contact (with confirmation)
+fuego addbook remove melanie --yes
+```
+
+**Storage:** `~/.fuego/contacts/address-book.json`
+
+**Commands:**
+- `add <name> <address> [--label "description"]` — Add a contact
+- `list` — Show all contacts
+- `show <name>` — Show contact details
+- `remove <name> [--yes]` — Remove a contact
 
 ---
 
