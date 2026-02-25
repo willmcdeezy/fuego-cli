@@ -10,6 +10,7 @@ import { serveCommand } from './commands/serve.js';
 import { dashboardCommand } from './commands/dashboard.js';
 import { updateCommand } from './commands/update.js';
 import { addRpcCommand } from './commands/addrpc.js';
+import { addBookAddCommand, addBookListCommand, addBookShowCommand, addBookRemoveCommand } from './commands/addbook.js';
 import { showBanner } from './lib/ascii.js';
 
 async function main() {
@@ -79,6 +80,32 @@ async function main() {
     .option('-u, --url <url>', 'RPC endpoint URL (e.g., https://api.mainnet-beta.solana.com)')
     .option('-n, --network <network>', 'Network type (mainnet, devnet, testnet)', 'mainnet')
     .action(addRpcCommand);
+
+  const addbook = program
+    .command('addbook')
+    .description('Manage your address book (stored in ~/.fuego/contacts/address-book.json)');
+
+  addbook
+    .command('add <name> <address>')
+    .description('Add a contact to your address book')
+    .option('-l, --label <label>', 'Optional description/label for this contact')
+    .action(addBookAddCommand);
+
+  addbook
+    .command('list')
+    .description('List all contacts in your address book')
+    .action(addBookListCommand);
+
+  addbook
+    .command('show <name>')
+    .description('Show details for a specific contact')
+    .action(addBookShowCommand);
+
+  addbook
+    .command('remove <name>')
+    .description('Remove a contact from your address book')
+    .option('-y, --yes', 'Skip confirmation prompt')
+    .action(addBookRemoveCommand);
 
   await program.parseAsync(process.argv);
 }

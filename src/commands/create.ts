@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import ora from 'ora';
+import path from 'path';
 import { FuegoWallet } from '../lib/wallet.js';
 import { getWalletPath, getConfigPath, getFuegoCliVersion, setFuegoCliVersion } from '../lib/config.js';
 import { showSuccess, showWarning, showInfo, formatPublicKey, flameDivider } from '../lib/ascii.js';
@@ -55,6 +56,17 @@ export async function createCommand(options: CreateOptions): Promise<void> {
       rpcUrl: existingConfig.rpcUrl || 'https://api.mainnet-beta.solana.com'
     }, { spaces: 2 });
     
+    // Create address book directory and empty file
+    const contactsDir = options.directory 
+      ? `${options.directory}/contacts` 
+      : path.join(path.dirname(getConfigPath()), 'contacts');
+    const addressBookPath = path.join(contactsDir, 'address-book.json');
+    
+    if (!fs.existsSync(addressBookPath)) {
+      fs.ensureDirSync(contactsDir);
+      fs.writeJsonSync(addressBookPath, {}, { spaces: 2 });
+    }
+    
     // Store fuego-cli version
     setFuegoCliVersion(getFuegoCliVersion());
     
@@ -77,7 +89,8 @@ export async function createCommand(options: CreateOptions): Promise<void> {
     // File locations
     showInfo('📁 Wallet Files', [
       'Keypair: ~/.fuego/wallet.json',
-      'Config: ~/.fuego/wallet-config.json'
+      'Config: ~/.fuego/wallet-config.json',
+      'Contacts: ~/.fuego/contacts/address-book.json'
     ]);
     
     flameDivider();
