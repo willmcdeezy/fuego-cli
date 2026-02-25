@@ -131,10 +131,10 @@ export async function sendCommand(recipient: string, amount: string, options: Se
       body: JSON.stringify(buildBody)
     });
 
-    const buildData = await buildResponse.json();
+    const buildData = await buildResponse.json() as { success: boolean; error?: string; data?: any };
 
     if (!buildData.success) {
-      showError('Failed to build transaction', buildData.error || 'Unknown error');
+      showError(`Failed to build transaction: ${buildData.error || 'Unknown error'}`);
       process.exit(1);
     }
 
@@ -188,13 +188,13 @@ export async function sendCommand(recipient: string, amount: string, options: Se
         }
         flameDivider();
       } else {
-        showError('Transaction failed', errorOutput || 'Unknown error');
+        showError(`Transaction failed: ${errorOutput || 'Unknown error'}`);
         process.exit(1);
       }
     });
 
   } catch (error: any) {
-    showError('Failed to send transaction', error.message);
+    showError(`Failed to send transaction: ${error.message}`);
     console.log(chalk.gray('\nMake sure the Fuego server is running: fuego serve'));
     process.exit(1);
   }
