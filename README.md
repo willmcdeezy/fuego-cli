@@ -72,6 +72,7 @@ fuego dashboard
 | `fuego balance` | Check SOL, USDC, USDT balances |
 | `fuego addrpc` | Configure your Solana RPC endpoint |
 | `fuego addbook` | Manage your address book |
+| `fuego send` | Send SOL, USDC, or USDT to an address or contact |
 
 ### Project Management
 
@@ -236,6 +237,33 @@ fuego addbook remove melanie --yes
 - `list` — Show all contacts
 - `show <name>` — Show contact details
 - `remove <name> [--yes]` — Remove a contact
+
+---
+
+### `fuego send <recipient> <amount>`
+
+Send SOL, USDC, or USDT to a Solana address or address book contact.
+
+```bash
+# Send SOL to an address
+fuego send GvCoHGGBR97Yphzc6SrRycZyS31oUYBM8m9hLRtJT7r5 0.5 --token SOL
+
+# Send USDC to an address book contact
+fuego send melanie 10 --token USDC
+
+# Send and confirm immediately
+fuego send melanie 5 --token USDT --yes
+```
+
+**Options:**
+- `-t, --token <token>` — **Required.** Token to send: `SOL`, `USDC`, or `USDT`
+- `-y, --yes` — Skip confirmation prompt and send immediately
+
+**Recipient can be:**
+- A full Solana address (e.g., `GvCoHGGBR97Yphzc6SrRycZyS31oUYBM8m9hLRtJT7r5`)
+- An address book contact name (e.g., `melanie`)
+
+**Safety:** By default, `fuego send` shows a transaction preview and requires `--yes` to confirm. This prevents accidental sends.
 
 ---
 

@@ -11,6 +11,7 @@ import { dashboardCommand } from './commands/dashboard.js';
 import { updateCommand } from './commands/update.js';
 import { addRpcCommand } from './commands/addrpc.js';
 import { addBookAddCommand, addBookListCommand, addBookShowCommand, addBookRemoveCommand } from './commands/addbook.js';
+import { sendCommand } from './commands/send.js';
 import { showBanner } from './lib/ascii.js';
 
 async function main() {
@@ -106,6 +107,13 @@ async function main() {
     .description('Remove a contact from your address book')
     .option('-y, --yes', 'Skip confirmation prompt')
     .action(addBookRemoveCommand);
+
+  program
+    .command('send <recipient> <amount>')
+    .description('Send SOL, USDC, or USDT to an address or contact')
+    .requiredOption('-t, --token <token>', 'Token to send (SOL, USDC, USDT)')
+    .option('-y, --yes', 'Skip confirmation and send immediately')
+    .action(sendCommand);
 
   await program.parseAsync(process.argv);
 }
