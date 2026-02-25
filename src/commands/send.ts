@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import { spawn } from 'child_process';
 import path from 'path';
 import os from 'os';
-import { loadWalletConfig } from '../lib/config.js';
+import { loadWalletConfig, findFuegoPath } from '../lib/config.js';
 import { showSuccess, showInfo, showError, formatPublicKey, flameDivider } from '../lib/ascii.js';
 import fs from 'fs-extra';
 
@@ -112,8 +112,14 @@ export async function sendCommand(recipient: string, amount: string, options: Se
   console.log();
   console.log(chalk.blue('⏳ Executing transaction via Fuego...'));
 
-  // Call Python script directly - it handles build + sign + submit
-  const scriptPath = path.join(os.homedir(), '.openclaw', 'workspace', 'fuego', 'scripts', 'fuego_transfer.py');
+  // Find fuego installation path and call Python script
+  const fuegoPath = findFuegoPath();
+  if (!fuegoPath) {
+    showError('Fuego installation not found. Run "fuego install" first.');
+    process.exit(1);
+  }
+  
+  const scriptPath = path.join(fuegoPath, 'scripts', 'fuego_transfer.py');
   
   const pythonProcess = spawn('python3', [
     scriptPath,
