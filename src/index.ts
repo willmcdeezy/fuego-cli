@@ -111,7 +111,7 @@ async function main() {
   program
     .command('send <recipient> <amount>')
     .description('Send SOL, USDC, or USDT to an address or contact')
-    .option('-t, --token <token>', 'Token to send (SOL, USDC, USDT)', 'SOL')
+    .requiredOption('-t, --token <token>', 'Token to send (SOL, USDC, USDT)')
     .option('-y, --yes', 'Skip confirmation and send immediately')
     .action(sendCommand);
 

@@ -49,10 +49,12 @@ export async function sendCommand(recipient: string, amount: string, options: Se
 
   // Validate inputs
   if (!recipient || !amount) {
-    console.log(chalk.red('❌ Usage: fuego send <recipient> <amount> [--token SOL|USDC|USDT]'));
-    console.log(chalk.gray('\nRecipient can be:'));
-    console.log(chalk.gray('  - A Solana address (e.g., GvCoHGGBR97Yphzc6SrRycZyS31oUYBM8m9hLRtJT7r5)'));
-    console.log(chalk.gray('  - An address book contact (e.g., "melanie")'));
+    console.log(chalk.red('❌ Usage: fuego send <recipient> <amount> --token SOL|USDC|USDT [--yes]'));
+    console.log(chalk.gray('\nExamples:'));
+    console.log(chalk.gray('  fuego send GvCo... 0.5 --token SOL'));
+    console.log(chalk.gray('  fuego send melanie 10 --token USDC'));
+    console.log(chalk.gray('  fuego send melanie 5 --token USDT --yes'));
+    console.log(chalk.gray('\nRecipient can be an address or address book contact name.'));
     process.exit(1);
   }
 
@@ -80,7 +82,11 @@ export async function sendCommand(recipient: string, amount: string, options: Se
   }
 
   // Determine token
-  const token = (options.token || 'SOL').toUpperCase();
+  const token = (options.token || '').toUpperCase();
+  if (!token) {
+    console.log(chalk.red('❌ Token is required. Use: --token SOL, --token USDC, or --token USDT'));
+    process.exit(1);
+  }
   if (!['SOL', 'USDC', 'USDT'].includes(token)) {
     console.log(chalk.red('❌ Invalid token. Use: SOL, USDC, or USDT'));
     process.exit(1);
