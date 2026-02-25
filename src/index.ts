@@ -9,6 +9,7 @@ import { balanceCommand } from './commands/balance.js';
 import { serveCommand } from './commands/serve.js';
 import { dashboardCommand } from './commands/dashboard.js';
 import { updateCommand } from './commands/update.js';
+import { addRpcCommand } from './commands/addrpc.js';
 import { showBanner } from './lib/ascii.js';
 
 async function main() {
@@ -71,6 +72,13 @@ async function main() {
     .option('--cli', 'Update only fuego-cli')
     .option('--fuego', 'Update only the fuego project')
     .action(updateCommand);
+
+  program
+    .command('addrpc')
+    .description('Add or update your Solana RPC endpoint')
+    .option('-u, --url <url>', 'RPC endpoint URL (e.g., https://api.mainnet-beta.solana.com)')
+    .option('-n, --network <network>', 'Network type (mainnet, devnet, testnet)', 'mainnet')
+    .action(addRpcCommand);
 
   await program.parseAsync(process.argv);
 }
