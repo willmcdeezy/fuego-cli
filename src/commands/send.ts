@@ -1,11 +1,11 @@
 import chalk from 'chalk';
-import { loadWalletConfig, getConfig } from '../lib/config.js';
-import { showSuccess, showInfo, showError, formatPublicKey, flameDivider } from '../lib/ascii.js';
-import fs from 'fs-extra';
+import { spawn } from 'child_process';
 import path from 'path';
 import os from 'os';
+import { loadWalletConfig } from '../lib/config.js';
+import { showSuccess, showInfo, showError, formatPublicKey, flameDivider } from '../lib/ascii.js';
+import fs from 'fs-extra';
 
-const FUEGO_SERVER_URL = 'http://127.0.0.1:8080';
 const ADDRESS_BOOK_FILE = path.join(os.homedir(), '.fuego', 'contacts', 'address-book.json');
 
 interface SendOptions {
@@ -98,7 +98,7 @@ export async function sendCommand(recipient: string, amount: string, options: Se
     `From: ${chalk.cyan(formatPublicKey(walletConfig.publicKey))}`,
     `To: ${chalk.cyan(formatPublicKey(resolvedAddress))}${isContact ? chalk.gray(` (${recipient})`) : ''}`,
     `Amount: ${chalk.yellow(amount)} ${chalk.cyan(token)}`,
-    `Network: ${chalk.gray(getConfig('network') || 'mainnet')}`
+    `Network: ${chalk.gray('mainnet-beta')}`
   ]);
 
   // Confirm unless --yes
@@ -110,92 +110,47 @@ export async function sendCommand(recipient: string, amount: string, options: Se
   }
 
   console.log();
-  console.log(chalk.blue('⏳ Building transaction...'));
+  console.log(chalk.blue('⏳ Executing transaction via Fuego...'));
 
-  try {
-    // Build transfer via Fuego server
-    const buildEndpoint = token === 'SOL' 
-      ? '/build-transfer-sol' 
-      : `/build-transfer-${token.toLowerCase()}`;
+  // Call Python script directly - it handles build + sign + submit
+  const scriptPath = path.join(os.homedir(), '.openclaw', 'workspace', 'fuego', 'scripts', 'sign_and_submit.py');
+  
+  const pythonProcess = spawn('python3', [
+    scriptPath,
+    '--from', walletConfig.publicKey,
+    '--to', resolvedAddress,
+    '--amount', amount,
+    '--token', token
+  ]);
 
-    const buildBody = {
-      network: getConfig('network') || 'mainnet',
-      from: walletConfig.publicKey,
-      to: resolvedAddress,
-      amount: token === 'SOL' ? amountNum : Math.round(amountNum * 1_000_000) // USDC/USDT have 6 decimals
-    };
+  let output = '';
+  let errorOutput = '';
 
-    const buildResponse = await fetch(`${FUEGO_SERVER_URL}${buildEndpoint}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(buildBody)
-    });
+  pythonProcess.stdout.on('data', (data) => {
+    output += data.toString();
+    process.stdout.write(data);
+  });
 
-    const buildData = await buildResponse.json() as { success: boolean; error?: string; data?: any };
+  pythonProcess.stderr.on('data', (data) => {
+    errorOutput += data.toString();
+  });
 
-    if (!buildData.success) {
-      showError(`Failed to build transaction: ${buildData.error || 'Unknown error'}`);
+  pythonProcess.on('close', (code) => {
+    if (code === 0) {
+      // Extract signature from output if present
+      const sigMatch = output.match(/Signature: ([A-Za-z0-9]+)/);
+      if (sigMatch) {
+        showSuccess(
+          '✅ Transaction Sent!',
+          `Amount: ${chalk.yellow(amount)} ${chalk.cyan(token)}\nTo: ${chalk.cyan(isContact ? recipient : formatPublicKey(resolvedAddress))}`
+        );
+      } else {
+        showSuccess('✅ Transaction Complete!', '');
+      }
+      flameDivider();
+    } else {
+      showError(`Transaction failed: ${errorOutput || 'Unknown error'}`);
       process.exit(1);
     }
-
-    console.log(chalk.blue('⏳ Signing transaction...'));
-
-    // Load wallet for signing
-    const walletPath = path.join(os.homedir(), '.fuego', 'wallet.json');
-    const walletData = fs.readJsonSync(walletPath);
-    
-    // Sign the transaction (in a real implementation, this would use the proper signing logic)
-    // For now, we'll use the Python script approach
-    const { spawn } = await import('child_process');
-    const { promisify } = await import('util');
-    
-    console.log(chalk.blue('⏳ Submitting transaction...'));
-
-    // Use the Python script to sign and submit
-    const scriptPath = path.join(os.homedir(), '.openclaw', 'workspace', 'fuego', 'scripts', 'sign_and_submit.py');
-    
-    const pythonProcess = spawn('python3', [
-      scriptPath,
-      '--from', walletConfig.publicKey,
-      '--to', resolvedAddress,
-      '--amount', amount,
-      '--token', token
-    ]);
-
-    let output = '';
-    let errorOutput = '';
-
-    pythonProcess.stdout.on('data', (data) => {
-      output += data.toString();
-      process.stdout.write(data);
-    });
-
-    pythonProcess.stderr.on('data', (data) => {
-      errorOutput += data.toString();
-    });
-
-    pythonProcess.on('close', (code) => {
-      if (code === 0) {
-        // Extract signature from output
-        const sigMatch = output.match(/Signature: ([A-Za-z0-9]+)/);
-        if (sigMatch) {
-          const signature = sigMatch[1];
-          showSuccess(
-            '✅ Transaction Sent!',
-            `Amount: ${chalk.yellow(amount)} ${chalk.cyan(token)}\nTo: ${chalk.cyan(isContact ? recipient : formatPublicKey(resolvedAddress))}`
-          );
-          console.log(chalk.gray(`\nExplorer: https://explorer.solana.com/tx/${signature}`));
-        }
-        flameDivider();
-      } else {
-        showError(`Transaction failed: ${errorOutput || 'Unknown error'}`);
-        process.exit(1);
-      }
-    });
-
-  } catch (error: any) {
-    showError(`Failed to send transaction: ${error.message}`);
-    console.log(chalk.gray('\nMake sure the Fuego server is running: fuego serve'));
-    process.exit(1);
-  }
+  });
 }
