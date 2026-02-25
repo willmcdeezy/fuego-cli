@@ -113,7 +113,7 @@ export async function sendCommand(recipient: string, amount: string, options: Se
   console.log(chalk.blue('⏳ Executing transaction via Fuego...'));
 
   // Call Python script directly - it handles build + sign + submit
-  const scriptPath = path.join(os.homedir(), '.openclaw', 'workspace', 'fuego', 'scripts', 'sign_and_submit.py');
+  const scriptPath = path.join(os.homedir(), '.openclaw', 'workspace', 'fuego', 'scripts', 'fuego_transfer.py');
   
   const pythonProcess = spawn('python3', [
     scriptPath,
