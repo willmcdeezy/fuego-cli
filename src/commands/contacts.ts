@@ -35,11 +35,11 @@ function isValidSolanaAddress(address: string): boolean {
 }
 
 // Add a contact
-export async function addBookAddCommand(name: string, address: string, options: { label?: string }): Promise<void> {
+export async function contactsAddCommand(name: string, address: string, options: { label?: string }): Promise<void> {
   console.log();
 
   if (!name || !address) {
-    console.log(chalk.red('❌ Usage: fuego addbook add <name> <address> [--label "description"]'));
+    console.log(chalk.red('❌ Usage: fuego contacts add <name> <address> [--label "description"]'));
     process.exit(1);
   }
 
@@ -75,14 +75,14 @@ export async function addBookAddCommand(name: string, address: string, options: 
 }
 
 // List all contacts
-export async function addBookListCommand(): Promise<void> {
+export async function contactsListCommand(): Promise<void> {
   console.log();
 
   const book = loadAddressBook();
   const contacts = Object.entries(book);
 
   if (contacts.length === 0) {
-    showInfo('📒 Address Book', ['No contacts yet.', '', chalk.yellow('Add one: fuego addbook add <name> <address>')]);
+    showInfo('📒 Contacts', ['No contacts yet.', '', chalk.yellow('Add one: fuego contacts add <name> <address>')]);
     flameDivider();
     return;
   }
@@ -94,16 +94,16 @@ export async function addBookListCommand(): Promise<void> {
     lines.push(`${chalk.cyan(name)}: ${chalk.white(shortAddr)}${entry.label ? chalk.gray(` (${entry.label})`) : ''}`);
   }
 
-  showInfo('📒 Address Book', lines);
+  showInfo('📒 Contacts', lines);
   flameDivider();
 }
 
 // Show a specific contact
-export async function addBookShowCommand(name: string): Promise<void> {
+export async function contactsShowCommand(name: string): Promise<void> {
   console.log();
 
   if (!name) {
-    console.log(chalk.red('❌ Usage: fuego addbook show <name>'));
+    console.log(chalk.red('❌ Usage: fuego contacts show <name>'));
     process.exit(1);
   }
 
@@ -112,7 +112,7 @@ export async function addBookShowCommand(name: string): Promise<void> {
 
   if (!entry) {
     console.log(chalk.red(`❌ Contact "${name}" not found.`));
-    console.log(chalk.gray('\nUse "fuego addbook list" to see all contacts.'));
+    console.log(chalk.gray('\nUse "fuego contacts list" to see all contacts.'));
     process.exit(1);
   }
 
@@ -126,11 +126,11 @@ export async function addBookShowCommand(name: string): Promise<void> {
 }
 
 // Remove a contact
-export async function addBookRemoveCommand(name: string, options: { yes?: boolean }): Promise<void> {
+export async function contactsRemoveCommand(name: string, options: { yes?: boolean }): Promise<void> {
   console.log();
 
   if (!name) {
-    console.log(chalk.red('❌ Usage: fuego addbook remove <name> [--yes]'));
+    console.log(chalk.red('❌ Usage: fuego contacts remove <name> [--yes]'));
     process.exit(1);
   }
 
@@ -150,6 +150,6 @@ export async function addBookRemoveCommand(name: string, options: { yes?: boolea
   delete book[name];
   saveAddressBook(book);
 
-  showSuccess('✅ Contact Removed', `Removed "${chalk.cyan(name)}" from address book.`);
+  showSuccess('✅ Contact Removed', `Removed "${chalk.cyan(name)}" from contacts.`);
   flameDivider();
 }

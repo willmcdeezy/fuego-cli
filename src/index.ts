@@ -9,10 +9,11 @@ import { balanceCommand } from './commands/balance.js';
 import { serveCommand } from './commands/serve.js';
 import { dashboardCommand } from './commands/dashboard.js';
 import { updateCommand } from './commands/update.js';
-import { addRpcCommand } from './commands/addrpc.js';
-import { addBookAddCommand, addBookListCommand, addBookShowCommand, addBookRemoveCommand } from './commands/addbook.js';
+import { rpcCommand } from './commands/rpc.js';
+import { contactsAddCommand, contactsListCommand, contactsShowCommand, contactsRemoveCommand } from './commands/contacts.js';
 import { sendCommand } from './commands/send.js';
 import { showBanner } from './lib/ascii.js';
+import { getFuegoCliVersion } from './lib/config.js';
 
 async function main() {
   // Show banner for help and when no args provided
@@ -26,7 +27,7 @@ async function main() {
   program
     .name('fuego')
     .description('🔥 Fuego CLI - Sovereign Solana wallet for AI agents')
-    .version('0.1.0')
+    .version(getFuegoCliVersion())
     .configureOutput({
       outputError: (str, write) => write(chalk.red(str))
     });
@@ -76,37 +77,37 @@ async function main() {
     .action(updateCommand);
 
   program
-    .command('addrpc')
-    .description('Add or update your Solana RPC endpoint')
+    .command('rpc')
+    .description('Show or configure your Solana RPC endpoint')
     .option('-u, --url <url>', 'RPC endpoint URL (e.g., https://api.mainnet-beta.solana.com)')
     .option('-n, --network <network>', 'Network type (mainnet, devnet, testnet)', 'mainnet')
-    .action(addRpcCommand);
+    .action(rpcCommand);
 
-  const addbook = program
-    .command('addbook')
-    .description('Manage your address book (stored in ~/.fuego/contacts/address-book.json)');
+  const contacts = program
+    .command('contacts')
+    .description('Manage your contacts (stored in ~/.fuego/contacts/address-book.json)');
 
-  addbook
+  contacts
     .command('add <name> <address>')
-    .description('Add a contact to your address book')
+    .description('Add a contact')
     .option('-l, --label <label>', 'Optional description/label for this contact')
-    .action(addBookAddCommand);
+    .action(contactsAddCommand);
 
-  addbook
+  contacts
     .command('list')
-    .description('List all contacts in your address book')
-    .action(addBookListCommand);
+    .description('List all contacts')
+    .action(contactsListCommand);
 
-  addbook
+  contacts
     .command('show <name>')
     .description('Show details for a specific contact')
-    .action(addBookShowCommand);
+    .action(contactsShowCommand);
 
-  addbook
+  contacts
     .command('remove <name>')
-    .description('Remove a contact from your address book')
+    .description('Remove a contact')
     .option('-y, --yes', 'Skip confirmation prompt')
-    .action(addBookRemoveCommand);
+    .action(contactsRemoveCommand);
 
   program
     .command('send <recipient> <amount>')

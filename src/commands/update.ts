@@ -48,8 +48,10 @@ export async function updateCommand(options: UpdateOptions): Promise<void> {
       execSync('npm install -g fuego-cli@latest', { stdio: 'pipe' });
       spinner.stop();
       
-      setFuegoCliVersion(currentCliVersion);
-      showSuccess('✅ fuego-cli updated!', `Version: ${chalk.cyan(currentCliVersion)}`);
+      // Get the NEW version after update
+      const newCliVersion = getFuegoCliVersion();
+      setFuegoCliVersion(newCliVersion);
+      showSuccess('✅ fuego-cli updated!', `Version: ${chalk.cyan(newCliVersion)}`);
       cliUpdated = true;
     } catch (error: any) {
       spinner.stop();
