@@ -2,12 +2,12 @@ import chalk from 'chalk';
 import { setConfig, getConfig, listConfig } from '../lib/config.js';
 import { showSuccess, showInfo, flameDivider } from '../lib/ascii.js';
 
-interface AddRpcOptions {
+interface RpcOptions {
   url?: string;
   network?: string;
 }
 
-export async function addRpcCommand(options: AddRpcOptions): Promise<void> {
+export async function rpcCommand(options: RpcOptions): Promise<void> {
   console.log(); // spacer
 
   // If no URL provided, show current config and help
@@ -19,8 +19,8 @@ export async function addRpcCommand(options: AddRpcOptions): Promise<void> {
       `RPC URL: ${currentRpc ? chalk.cyan(currentRpc) : chalk.gray('Not set')}`,
       `Network: ${currentNetwork ? chalk.cyan(currentNetwork) : chalk.gray('mainnet')}`,
       '',
-      `${chalk.yellow('Usage:')} fuego addrpc --url https://api.mainnet-beta.solana.com`,
-      `${chalk.yellow('Or:')}     fuego addrpc --url https://helius.xyz/... --network mainnet`
+      `${chalk.yellow('Usage:')} fuego rpc --url https://api.mainnet-beta.solana.com`,
+      `${chalk.yellow('Or:')}     fuego rpc --url https://helius.xyz/... --network mainnet`
     ]);
     
     flameDivider();
