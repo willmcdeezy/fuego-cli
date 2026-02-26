@@ -12,6 +12,7 @@ import { updateCommand } from './commands/update.js';
 import { rpcCommand } from './commands/rpc.js';
 import { contactsAddCommand, contactsListCommand, contactsShowCommand, contactsRemoveCommand } from './commands/contacts.js';
 import { sendCommand } from './commands/send.js';
+import { fundCommand } from './commands/fund.js';
 import { showBanner } from './lib/ascii.js';
 import { getFuegoCliVersion } from './lib/config.js';
 
@@ -108,6 +109,11 @@ async function main() {
     .description('Remove a contact')
     .option('-y, --yes', 'Skip confirmation prompt')
     .action(contactsRemoveCommand);
+
+  program
+    .command('fund')
+    .description('Show funding options: MoonPay link + QR code for your wallet')
+    .action(fundCommand);
 
   program
     .command('send <recipient> <amount>')
