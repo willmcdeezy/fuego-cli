@@ -13,6 +13,7 @@ import { addRpcCommand } from './commands/addrpc.js';
 import { addBookAddCommand, addBookListCommand, addBookShowCommand, addBookRemoveCommand } from './commands/addbook.js';
 import { sendCommand } from './commands/send.js';
 import { showBanner } from './lib/ascii.js';
+import { getFuegoCliVersion } from './lib/config.js';
 
 async function main() {
   // Show banner for help and when no args provided
@@ -26,7 +27,7 @@ async function main() {
   program
     .name('fuego')
     .description('🔥 Fuego CLI - Sovereign Solana wallet for AI agents')
-    .version('0.1.0')
+    .version(getFuegoCliVersion())
     .configureOutput({
       outputError: (str, write) => write(chalk.red(str))
     });
