@@ -70,8 +70,8 @@ fuego dashboard
 | `fuego create` | Create a new Solana wallet |
 | `fuego address` | Show your wallet address |
 | `fuego balance` | Check SOL, USDC, USDT balances |
-| `fuego addrpc` | Configure your Solana RPC endpoint |
-| `fuego addbook` | Manage your address book |
+| `fuego rpc` | Show or configure your Solana RPC endpoint |
+| `fuego contacts` | Manage your contacts |
 | `fuego send` | Send SOL, USDC, or USDT to an address or contact |
 
 ### Project Management
@@ -191,19 +191,19 @@ fuego update --fuego
 
 ---
 
-### `fuego addrpc [options]`
+### `fuego rpc [options]`
 
-Configure your Solana RPC endpoint for faster or more reliable connections.
+Show or configure your Solana RPC endpoint for faster or more reliable connections.
 
 ```bash
 # Show current RPC configuration
-fuego addrpc
+fuego rpc
 
 # Set a custom RPC endpoint
-fuego addrpc --url https://helius.xyz/... --network mainnet
+fuego rpc --url https://helius.xyz/... --network mainnet
 
 # Use public mainnet
-fuego addrpc --url https://api.mainnet-beta.solana.com
+fuego rpc --url https://api.mainnet-beta.solana.com
 ```
 
 **Options:**
@@ -212,22 +212,22 @@ fuego addrpc --url https://api.mainnet-beta.solana.com
 
 ---
 
-### `fuego addbook <subcommand>`
+### `fuego contacts <subcommand>`
 
-Manage your address book for quick access to frequently used addresses.
+Manage your contacts for quick access to frequently used addresses.
 
 ```bash
 # Add a contact
-fuego addbook add melanie GvCoHGGBR97Yphzc6SrRycZyS31oUYBM8m9hLRtJT7r5 --label "Melanie's wallet"
+fuego contacts add melanie GvCoHGGBR97Yphzc6SrRycZyS31oUYBM8m9hLRtJT7r5 --label "Melanie's wallet"
 
 # List all contacts
-fuego addbook list
+fuego contacts list
 
 # Show specific contact
-fuego addbook show melanie
+fuego contacts show melanie
 
 # Remove contact (with confirmation)
-fuego addbook remove melanie --yes
+fuego contacts remove melanie --yes
 ```
 
 **Storage:** `~/.fuego/contacts/address-book.json`
@@ -248,7 +248,7 @@ Send SOL, USDC, or USDT to a Solana address or address book contact.
 # Send SOL to an address
 fuego send GvCoHGGBR97Yphzc6SrRycZyS31oUYBM8m9hLRtJT7r5 0.5 --token SOL
 
-# Send USDC to an address book contact
+# Send USDC to a contact
 fuego send melanie 10 --token USDC
 
 # Send and confirm immediately
@@ -261,7 +261,7 @@ fuego send melanie 5 --token USDT --yes
 
 **Recipient can be:**
 - A full Solana address (e.g., `GvCoHGGBR97Yphzc6SrRycZyS31oUYBM8m9hLRtJT7r5`)
-- An address book contact name (e.g., `melanie`)
+- A contact name (e.g., `melanie`)
 
 **Safety:** By default, `fuego send` shows a transaction preview and requires `--yes` to confirm. This prevents accidental sends.
 
