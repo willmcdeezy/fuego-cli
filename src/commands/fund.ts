@@ -1,7 +1,8 @@
 import chalk from 'chalk';
 import qrcode from 'qrcode-terminal';
+import boxen from 'boxen';
 import { loadWalletConfig } from '../lib/config.js';
-import { showInfo, showSuccess, flameDivider } from '../lib/ascii.js';
+import { showInfo, flameDivider } from '../lib/ascii.js';
 
 export async function fundCommand(): Promise<void> {
   console.log(); // spacer
@@ -18,34 +19,40 @@ export async function fundCommand(): Promise<void> {
   // MoonPay URL for funding SOL to this wallet
   const moonpayUrl = `https://buy.moonpay.com/?currencyCode=SOL&walletAddress=${address}`;
 
-  showSuccess('💰 Fund Your Wallet', 'Get SOL into your wallet');
-  
-  console.log(); // spacer
-  
-  // Show address first
-  console.log(chalk.yellow('📍 Address:'));
-  console.log(chalk.cyan(address));
-  
-  console.log(); // spacer
-  
-  // Generate QR code for the wallet address (indented)
-  console.log(chalk.yellow('📱 Scan address:'));
-  console.log();
-  
-  // Generate QR with indentation (4 spaces)
+  // Generate QR code first, then display everything in a box
   qrcode.generate(address, { small: true }, (qrcodeOutput: string) => {
-    const indented = qrcodeOutput.split('\n').map(line => '    ' + line).join('\n');
-    console.log(indented);
+    // Indent the QR code
+    const indentedQr = qrcodeOutput.split('\n').map(line => '  ' + line).join('\n');
+    
+    // Build the fund box content
+    const fundContent = [
+      chalk.bold.cyan('💰 Fund Your Wallet'),
+      '',
+      chalk.white('Address:'),
+      chalk.cyan(address),
+      '',
+      chalk.yellow('📱 Scan to send funds to your address:'),
+      '',
+      indentedQr
+    ].join('\n');
+    
+    // Display the fund box
+    console.log(
+      boxen(fundContent, {
+        padding: 1,
+        margin: { top: 0, bottom: 1 },
+        borderStyle: 'round',
+        borderColor: 'green'
+      })
+    );
+    
+    // Show MoonPay box
+    showInfo('🔗 MoonPay Onramp', [
+      'Buy SOL with card/bank and send directly to your wallet:',
+      '',
+      chalk.cyan(moonpayUrl)
+    ]);
+    
+    flameDivider();
   });
-  
-  console.log(); // spacer
-  
-  // Show MoonPay link (no QR code)
-  showInfo('🔗 MoonPay Onramp', [
-    'Buy SOL with card/bank and send directly to your wallet:',
-    '',
-    chalk.cyan(moonpayUrl)
-  ]);
-  
-  flameDivider();
 }
