@@ -18,34 +18,34 @@ export async function fundCommand(): Promise<void> {
   // MoonPay URL for funding SOL to this wallet
   const moonpayUrl = `https://buy.moonpay.com/?currencyCode=SOL&walletAddress=${address}`;
 
-  showSuccess('💰 Fund Your Wallet', `Address: ${chalk.cyan(address)}`);
+  showSuccess('💰 Fund Your Wallet', 'Get SOL into your wallet');
   
   console.log(); // spacer
   
-  // Generate QR code for the wallet address
-  console.log(chalk.yellow('📱 Scan to receive SOL:'));
+  // Show address first
+  console.log(chalk.yellow('📍 Address:'));
+  console.log(chalk.cyan(address));
+  
+  console.log(); // spacer
+  
+  // Generate QR code for the wallet address (indented)
+  console.log(chalk.yellow('📱 Scan address:'));
   console.log();
-  qrcode.generate(address, { small: true });
+  
+  // Generate QR with indentation (4 spaces)
+  qrcode.generate(address, { small: true }, (qrcodeOutput: string) => {
+    const indented = qrcodeOutput.split('\n').map(line => '    ' + line).join('\n');
+    console.log(indented);
+  });
   
   console.log(); // spacer
   
-  // Show MoonPay link
+  // Show MoonPay link (no QR code)
   showInfo('🔗 MoonPay Onramp', [
     'Buy SOL with card/bank and send directly to your wallet:',
     '',
-    chalk.cyan(moonpayUrl),
-    '',
-    chalk.gray('Or scan this QR code to fund:')
+    chalk.cyan(moonpayUrl)
   ]);
-  
-  console.log();
-  qrcode.generate(moonpayUrl, { small: true });
-  
-  console.log(); // spacer
-  
-  // Copy-paste friendly
-  console.log(chalk.gray('Your address (for copying):'));
-  console.log(chalk.white(address));
   
   flameDivider();
 }
