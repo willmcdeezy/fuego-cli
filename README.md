@@ -72,6 +72,7 @@ fuego dashboard
 | `fuego balance` | Check SOL, USDC, USDT balances |
 | `fuego rpc` | Show or configure your Solana RPC endpoint |
 | `fuego contacts` | Manage your contacts |
+| `fuego fund` | Show funding options: MoonPay link + QR code |
 | `fuego send` | Send SOL, USDC, or USDT to an address or contact |
 
 ### Project Management
@@ -237,6 +238,43 @@ fuego contacts remove melanie --yes
 - `list` — Show all contacts
 - `show <name>` — Show contact details
 - `remove <name> [--yes]` — Remove a contact
+
+---
+
+### `fuego fund`
+
+Show funding options for your wallet: MoonPay onramp link + QR codes for easy scanning.
+
+```bash
+fuego fund
+```
+
+**Output:**
+- Your wallet address (plain text for copying)
+- QR code of your address (scan to receive SOL from another wallet)
+- MoonPay onramp URL (buy SOL with card/bank, pre-filled with your address)
+- QR code for MoonPay link (scan to open on mobile)
+
+**Example:**
+```
+💰 Fund Your Wallet
+Address: DmFyLRiJtc4Bz75hjAqPaEJpDfRe4GEnRLPwc3EgeUZF
+
+📱 Scan to receive SOL:
+
+[QR CODE]
+
+🔗 MoonPay Onramp
+Buy SOL with card/bank and send directly to your wallet:
+
+https://buy.moonpay.com/?currencyCode=SOL&walletAddress=DmFyLRiJtc4Bz75hjAqPaEJpDfRe4GEnRLPwc3EgeUZF
+
+Or scan this QR code to fund:
+
+[QR CODE]
+```
+
+**Note:** MoonPay requires KYC and is available in supported regions. The QR code for your address works with any Solana wallet (Phantom, Solflare, etc.).
 
 ---
 
