@@ -54,6 +54,12 @@ export async function installCommand(options: InstallOptions): Promise<void> {
     const repoUrl = 'https://github.com/willmcdeezy/fuego.git';
     execSync(`git clone ${repoUrl} "${installPath}"`, { stdio: 'pipe' });
     
+    spinner.text = 'Installing dependencies...';
+    spinner.color = 'green';
+    
+    // Run npm install in the installed directory
+    execSync('npm install', { cwd: installPath, stdio: 'pipe' });
+    
     spinner.stop();
     
     // Get the commit hash as version
@@ -74,10 +80,14 @@ export async function installCommand(options: InstallOptions): Promise<void> {
       `Location: ${chalk.cyan(installPath)}\nVersion: ${chalk.cyan(commitHash)}`
     );
     
-    showInfo('🚀 Next Steps', [
+    showInfo('🚀 You are all set!', [
       `cd ${safeCdPath}`,
-      'npm install',
-      'npm run start'
+      '',
+      'Next steps:',
+      '  • Start the server:     fuego serve',
+      '  • Fund your wallet:     fuego fund', 
+      '  • Open dashboard:       fuego dashboard',
+      '  • Check balance:        fuego balance'
     ]);
     
     flameDivider();
