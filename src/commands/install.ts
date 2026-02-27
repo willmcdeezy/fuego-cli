@@ -80,9 +80,14 @@ export async function installCommand(options: InstallOptions): Promise<void> {
       `Location: ${chalk.cyan(installPath)}\nVersion: ${chalk.cyan(commitHash)}`
     );
     
-    showInfo('🚀 Next Steps', [
+    showInfo('🚀 You are all set!', [
       `cd ${safeCdPath}`,
-      'npm run start'
+      '',
+      'Next steps:',
+      '  • Start the server:     fuego serve',
+      '  • Fund your wallet:     fuego fund', 
+      '  • Open dashboard:       fuego dashboard',
+      '  • Check balance:        fuego balance'
     ]);
     
     flameDivider();
