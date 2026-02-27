@@ -32,15 +32,15 @@ export async function purchCommand(productUrl: string, options: PurchOptions): P
     console.log(chalk.gray('    --postal-code <zip>'));
     console.log(chalk.gray('    --country <country-code>'));
     console.log(chalk.gray('\nExample:'));
-    console.log(chalk.gray('  fuego purch https://amazon.com/dp/B071G6PFDR \\\'));
-    console.log(chalk.gray('    --email user@example.com \\\'));
-    console.log(chalk.gray('    --name "John Doe" \\\'));
-    console.log(chalk.gray('    --address-line1 "123 Main St" \\\'));
-    console.log(chalk.gray('    --address-line2 "Apt 4B" \\\'));
-    console.log(chalk.gray('    --city "Austin" \\\'));
-    console.log(chalk.gray('    --state TX \\\'));
-    console.log(chalk.gray('    --postal-code 78701 \\\'));
-    console.log(chalk.gray('    --country US'));
+    console.log(chalk.gray('  fuego purch https://amazon.com/dp/B071G6PFDR \\'));
+    console.log(chalk.gray('    --email <your-email@example.com> \\'));
+    console.log(chalk.gray('    --name "<your-full-name>" \\'));
+    console.log(chalk.gray('    --address-line1 "<your-street-address>" \\'));
+    console.log(chalk.gray('    --address-line2 "<apartment-or-suite>" \\'));
+    console.log(chalk.gray('    --city "<your-city>" \\'));
+    console.log(chalk.gray('    --state <ST> \\'));
+    console.log(chalk.gray('    --postal-code <ZIP> \\'));
+    console.log(chalk.gray('    --country <CC>'));
     process.exit(1);
   }
 
