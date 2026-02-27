@@ -13,6 +13,7 @@ import { rpcCommand } from './commands/rpc.js';
 import { contactsAddCommand, contactsListCommand, contactsShowCommand, contactsRemoveCommand } from './commands/contacts.js';
 import { sendCommand } from './commands/send.js';
 import { fundCommand } from './commands/fund.js';
+import { purchCommand } from './commands/purch.js';
 import { showBanner } from './lib/ascii.js';
 import { getFuegoCliVersion } from './lib/config.js';
 
@@ -121,6 +122,19 @@ async function main() {
     .requiredOption('-t, --token <token>', 'Token to send (SOL, USDC, USDT)')
     .option('-y, --yes', 'Skip confirmation and send immediately')
     .action(sendCommand);
+
+  program
+    .command('purch <product-url>')
+    .description('Purchase products via x402/Purch.xyz (Amazon, Shopify, etc.)')
+    .requiredOption('--email <email>', 'Email for order notifications')
+    .requiredOption('--name <name>', 'Full name for shipping')
+    .requiredOption('--address-line1 <address>', 'Street address line 1')
+    .option('--address-line2 <address>', 'Apartment, suite, etc. (optional)')
+    .requiredOption('--city <city>', 'City')
+    .requiredOption('--state <state>', 'State/Province code (e.g., TX)')
+    .requiredOption('--postal-code <code>', 'Postal/ZIP code')
+    .option('--country <code>', 'Country code (default: US)', 'US')
+    .action(purchCommand);
 
   await program.parseAsync(process.argv);
 }
