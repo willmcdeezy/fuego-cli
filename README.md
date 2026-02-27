@@ -348,7 +348,7 @@ fuego purch https://amazon.com/dp/B071G6PFDR \
 
 ### `fuego install [options]`
 
-Install the [Fuego project](https://github.com/willmcdeezy/fuego) — Rust server, Python scripts, and dashboard.
+Install the [Fuego project](https://github.com/willmcdeezy/fuego) — Rust server, scripts, and dashboard. Automatically runs `npm install` after cloning.
 
 **Auto-detection:**
 1. Checks for `~/.openclaw/workspace` first (OpenClaw agent machines)
