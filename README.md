@@ -74,6 +74,7 @@ fuego dashboard
 | `fuego contacts` | Manage your contacts |
 | `fuego fund` | Show funding options: MoonPay link + QR code |
 | `fuego send` | Send SOL, USDC, or USDT to an address or contact |
+| `fuego purch` | Purchase products via x402 (Amazon, Shopify, etc.) |
 
 ### Project Management
 
@@ -302,6 +303,46 @@ fuego send melanie 5 --token USDT --yes
 - A contact name (e.g., `melanie`)
 
 **Safety:** By default, `fuego send` shows a transaction preview and requires `--yes` to confirm. This prevents accidental sends.
+
+---
+
+### `fuego purch <product-url>`
+
+Purchase products via x402/Purch.xyz (Amazon, Shopify, etc.) using USDC on Solana.
+
+```bash
+# Purchase from Amazon
+fuego purch https://amazon.com/dp/B071G6PFDR \
+  --email user@example.com \
+  --name "John Doe" \
+  --address-line1 "123 Main St" \
+  --address-line2 "Apt 4B" \
+  --city "Austin" \
+  --state TX \
+  --postal-code 78701 \
+  --country US
+```
+
+**Required Options:**
+- `--email <email>` — Email for order notifications
+- `--name <name>` — Full name for shipping
+- `--address-line1 <address>` — Street address line 1
+- `--city <city>` — City
+- `--state <state>` — State/Province code (e.g., TX)
+- `--postal-code <code>` — Postal/ZIP code
+
+**Optional:**
+- `--address-line2 <address>` — Apartment, suite, etc.
+- `--country <code>` — Country code (default: US)
+
+**How it works:**
+1. Sends product URL and shipping info to Purch.xyz
+2. Receives x402 payment challenge ($0.01 USDC fee)
+3. Builds and signs x402 payment transaction
+4. Submits payment to Purch.xyz
+5. Receives order transaction (ready for final submission)
+
+**Note:** The final order transaction is displayed but not automatically submitted. Review the output to complete the purchase.
 
 ---
 
