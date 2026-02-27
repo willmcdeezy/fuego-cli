@@ -112,18 +112,17 @@ export async function sendCommand(recipient: string, amount: string, options: Se
   console.log();
   console.log(chalk.blue('⏳ Executing transaction via Fuego...'));
 
-  // Find fuego installation path and call Python script
+  // Find fuego installation path and call Node.js script
   const fuegoPath = findFuegoPath();
   if (!fuegoPath) {
     showError('Fuego installation not found. Run "fuego install" first.');
     process.exit(1);
   }
   
-  const scriptPath = path.join(fuegoPath, 'scripts', 'fuego_transfer.py');
+  const scriptPath = path.join(fuegoPath, 'scripts', 'fuego_transfer.mjs');
   
-  const pythonProcess = spawn('python3', [
+  const nodeProcess = spawn('node', [
     scriptPath,
-    '--from', walletConfig.publicKey,
     '--to', resolvedAddress,
     '--amount', amount,
     '--token', token
@@ -132,16 +131,16 @@ export async function sendCommand(recipient: string, amount: string, options: Se
   let output = '';
   let errorOutput = '';
 
-  pythonProcess.stdout.on('data', (data) => {
+  nodeProcess.stdout.on('data', (data) => {
     output += data.toString();
     process.stdout.write(data);
   });
 
-  pythonProcess.stderr.on('data', (data) => {
+  nodeProcess.stderr.on('data', (data) => {
     errorOutput += data.toString();
   });
 
-  pythonProcess.on('close', (code) => {
+  nodeProcess.on('close', (code) => {
     if (code === 0) {
       // Extract signature from output if present
       const sigMatch = output.match(/Signature: ([A-Za-z0-9]+)/);
