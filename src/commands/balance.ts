@@ -36,7 +36,7 @@ export async function balanceCommand(): Promise<void> {
     const network = 'mainnet-beta';
 
     // Query SOL balance
-    const solResponse = await fetch(`${FUEGO_SERVER_URL}/balance`, {
+    const solResponse = await fetch(`${FUEGO_SERVER_URL}/sol-balance`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ network, address: publicKey })
