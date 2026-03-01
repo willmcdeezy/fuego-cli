@@ -53,7 +53,8 @@ export async function createCommand(options: CreateOptions): Promise<void> {
     fs.writeJsonSync(configPath, {
       ...existingConfig,
       network: existingConfig.network || 'mainnet',
-      rpcUrl: existingConfig.rpcUrl || 'https://api.mainnet-beta.solana.com'
+      rpcUrl: existingConfig.rpcUrl || 'https://api.mainnet-beta.solana.com',
+      jupiterKey: existingConfig.jupiterKey || ''
     }, { spaces: 2 });
     
     // Create address book directory and empty file
