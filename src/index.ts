@@ -14,6 +14,8 @@ import { contactsAddCommand, contactsListCommand, contactsShowCommand, contactsR
 import { sendCommand } from './commands/send.js';
 import { fundCommand } from './commands/fund.js';
 import { purchCommand } from './commands/purch.js';
+import { jupiterQuoteCommand } from './commands/jupiter-quote.js';
+import { jupiterSwapCommand } from './commands/jupiter-swap.js';
 import { showBanner } from './lib/ascii.js';
 import { getFuegoCliVersion } from './lib/config.js';
 
@@ -135,6 +137,25 @@ async function main() {
     .requiredOption('--postal-code <code>', 'Postal/ZIP code')
     .option('--country <code>', 'Country code (default: US)', 'US')
     .action(purchCommand);
+
+  const jupiter = program
+    .command('jupiter')
+    .description('🪐 Jupiter swap commands');
+
+  jupiter
+    .command('quote <amount>')
+    .description('Get a swap quote from Jupiter')
+    .requiredOption('-i, --input <token>', 'Input token (SOL, USDC, USDT, BONK, JUP)')
+    .requiredOption('-o, --output <token>', 'Output token (SOL, USDC, USDT, BONK, JUP)')
+    .action(jupiterQuoteCommand);
+
+  jupiter
+    .command('swap <amount>')
+    .description('Execute a swap via Jupiter')
+    .requiredOption('-i, --input <token>', 'Input token (SOL, USDC, USDT, BONK, JUP)')
+    .requiredOption('-o, --output <token>', 'Output token (SOL, USDC, USDT, BONK, JUP)')
+    .option('-y, --yes', 'Skip confirmation and execute immediately')
+    .action(jupiterSwapCommand);
 
   await program.parseAsync(process.argv);
 }

@@ -69,11 +69,13 @@ fuego dashboard
 |---------|-------------|
 | `fuego create` | Create a new Solana wallet |
 | `fuego address` | Show your wallet address |
-| `fuego balance` | Check SOL, USDC, USDT balances |
+| `fuego balance` | Check all token balances (SOL + SPL tokens) |
 | `fuego rpc` | Show or configure your Solana RPC endpoint |
 | `fuego contacts` | Manage your contacts |
 | `fuego fund` | Show funding options: MoonPay link + QR code |
 | `fuego send` | Send SOL, USDC, or USDT to an address or contact |
+| `fuego jupiter quote` | Get swap quotes from Jupiter |
+| `fuego jupiter swap` | Execute token swaps via Jupiter |
 | `fuego purch` | Purchase products via x402 (Amazon, Shopify, etc.) |
 
 ### Project Management
@@ -115,7 +117,7 @@ fuego create --name prod-wallet
 
 ### `fuego balance`
 
-Check balances via the Fuego server.
+Check all token balances via the Fuego server. Shows SOL plus all SPL tokens in your wallet.
 
 ```bash
 fuego balance
@@ -129,9 +131,9 @@ fuego bal
 
 Address: DmFy...eUZF
 
-- SOL:     1.234567890
-- USDC:   $0.00
-- USDT:   $0.00
+- SOL:     0.105113976
+- USDC:   28.85
+- BONK:    712,687.68
 ```
 
 ---
@@ -303,6 +305,55 @@ fuego send melanie 5 --token USDT --yes
 - A contact name (e.g., `melanie`)
 
 **Safety:** By default, `fuego send` shows a transaction preview and requires `--yes` to confirm. This prevents accidental sends.
+
+---
+
+### `fuego jupiter quote <amount>`
+
+Get a swap quote from Jupiter for any supported token pair.
+
+```bash
+# Quote SOL to USDC
+fuego jupiter quote 0.5 --input SOL --output USDC
+
+# Quote USDC to BONK
+fuego jupiter quote 100 --input USDC --output BONK
+
+# Quote using full mint addresses
+fuego jupiter quote 1.0 --input SOL --output DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263
+```
+
+**Options:**
+- `-i, --input <token>` — **Required.** Input token symbol (SOL, USDC, USDT, BONK, JUP) or full mint address
+- `-o, --output <token>` — **Required.** Output token symbol or full mint address
+
+**Output:** Shows expected output amount, price impact, and routing information.
+
+---
+
+### `fuego jupiter swap <amount>`
+
+Execute a token swap via Jupiter.
+
+```bash
+# Swap SOL to USDC (preview only)
+fuego jupiter swap 0.5 --input SOL --output USDC
+
+# Swap SOL to BONK (with confirmation)
+fuego jupiter swap 0.05 --input SOL --output BONK --yes
+
+# Swap USDC to random token by mint address
+fuego jupiter swap 10 --input USDC --output <mint-address> --yes
+```
+
+**Options:**
+- `-i, --input <token>` — **Required.** Input token symbol or full mint address
+- `-o, --output <token>` — **Required.** Output token symbol or full mint address
+- `-y, --yes` — Skip confirmation and execute immediately
+
+**Supported Tokens:** SOL, USDC, USDT, BONK, JUP (or any token by full mint address)
+
+**Note:** For unknown tokens, provide the full 44-character mint address. The dashboard caches the top 100 tokens for symbol lookups.
 
 ---
 
