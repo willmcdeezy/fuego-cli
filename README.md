@@ -69,7 +69,7 @@ fuego dashboard
 |---------|-------------|
 | `fuego create` | Create a new Solana wallet |
 | `fuego address` | Show your wallet address |
-| `fuego balance` | Check SOL, USDC, USDT balances |
+| `fuego balance` | Check all token balances (SOL + SPL tokens) |
 | `fuego rpc` | Show or configure your Solana RPC endpoint |
 | `fuego contacts` | Manage your contacts |
 | `fuego fund` | Show funding options: MoonPay link + QR code |
@@ -115,7 +115,7 @@ fuego create --name prod-wallet
 
 ### `fuego balance`
 
-Check balances via the Fuego server.
+Check all token balances via the Fuego server. Shows SOL plus all SPL tokens in your wallet.
 
 ```bash
 fuego balance
@@ -129,9 +129,9 @@ fuego bal
 
 Address: DmFy...eUZF
 
-- SOL:     1.234567890
-- USDC:   $0.00
-- USDT:   $0.00
+- SOL:     0.105113976
+- USDC:   28.85
+- BONK:    712,687.68
 ```
 
 ---
