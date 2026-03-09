@@ -134,6 +134,7 @@ async function main() {
     .requiredOption('--state <state>', 'State/Province code (e.g., TX)')
     .requiredOption('--postal-code <code>', 'Postal/ZIP code')
     .option('--country <code>', 'Country code (default: US)', 'US')
+    .option('--max-price <cents>', 'Maximum price in cents (e.g., 1000 = $10.00, required for URL products)')
     .action(purchCommand);
 
   await program.parseAsync(process.argv);
