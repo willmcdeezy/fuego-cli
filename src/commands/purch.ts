@@ -13,6 +13,7 @@ interface PurchOptions {
   state: string;
   postalCode: string;
   country?: string;
+  maxPrice?: string;
 }
 
 export async function purchCommand(productUrl: string, options: PurchOptions): Promise<void> {
@@ -31,6 +32,7 @@ export async function purchCommand(productUrl: string, options: PurchOptions): P
     console.log(chalk.gray('    --state <state-code>'));
     console.log(chalk.gray('    --postal-code <zip>'));
     console.log(chalk.gray('    --country <country-code>'));
+    console.log(chalk.gray('    --max-price <price-in-cents>  (e.g., 1000 = $10.00, required for URL products)'));
     console.log(chalk.gray('\nExample:'));
     console.log(chalk.gray('  fuego purch https://amazon.com/dp/B071G6PFDR \\'));
     console.log(chalk.gray('    --email <your-email@example.com> \\'));
@@ -40,7 +42,8 @@ export async function purchCommand(productUrl: string, options: PurchOptions): P
     console.log(chalk.gray('    --city "<your-city>" \\'));
     console.log(chalk.gray('    --state <ST> \\'));
     console.log(chalk.gray('    --postal-code <ZIP> \\'));
-    console.log(chalk.gray('    --country <CC>'));
+    console.log(chalk.gray('    --country <CC> \\'));
+    console.log(chalk.gray('    --max-price 1000'));
     process.exit(1);
   }
 
@@ -52,7 +55,7 @@ export async function purchCommand(productUrl: string, options: PurchOptions): P
   }
 
   // Show order preview
-  showInfo('🛒 x402 Purchase Preview', [
+  const previewItems = [
     `Product: ${chalk.cyan(productUrl)}`,
     `Email: ${chalk.cyan(options.email)}`,
     `Name: ${chalk.cyan(options.name)}`,
@@ -61,7 +64,14 @@ export async function purchCommand(productUrl: string, options: PurchOptions): P
     `Country: ${chalk.cyan(options.country || 'US')}`,
     `Wallet: ${chalk.gray(walletConfig.publicKey)}`,
     `Network: ${chalk.gray('mainnet-beta')}`
-  ]);
+  ];
+  
+  if (options.maxPrice) {
+    const dollars = (parseInt(options.maxPrice) / 100).toFixed(2);
+    previewItems.splice(1, 0, `Max Price: ${chalk.cyan('$' + dollars)}`);
+  }
+  
+  showInfo('🛒 x402 Purchase Preview', previewItems);
 
   console.log();
   console.log(chalk.blue('⏳ Processing x402 payment via Purch.xyz...'));
@@ -89,6 +99,10 @@ export async function purchCommand(productUrl: string, options: PurchOptions): P
 
   if (options.addressLine2) {
     args.push('--address-line2', options.addressLine2);
+  }
+
+  if (options.maxPrice) {
+    args.push('--max-price', options.maxPrice);
   }
 
   const nodeProcess = spawn('node', args);
