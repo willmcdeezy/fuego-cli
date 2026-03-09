@@ -132,7 +132,7 @@ export async function jupiterSwapCommand(amount: string, options: SwapOptions): 
       if (sigMatch) {
         showSuccess(
           '✅ Swap Complete!',
-          `${chalk.yellow(amount)} ${chalk.cyan(options.input.toUpperCase())} → ${chalk.cyan(options.output.toUpperCase())}`
+          `${chalk.yellow(amount)} ${chalk.cyan(options.input?.toUpperCase() || 'INPUT')} → ${chalk.cyan(options.output?.toUpperCase() || 'OUTPUT')}`
         );
       } else {
         showSuccess('✅ Swap Executed!', '');
