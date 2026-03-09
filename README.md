@@ -371,7 +371,8 @@ fuego purch https://amazon.com/dp/B071G6PFDR \
   --city "Austin" \
   --state TX \
   --postal-code 78701 \
-  --country US
+  --country US \
+  --max-price 1000
 ```
 
 **Required Options:**
@@ -385,6 +386,18 @@ fuego purch https://amazon.com/dp/B071G6PFDR \
 **Optional:**
 - `--address-line2 <address>` — Apartment, suite, etc.
 - `--country <code>` — Country code (default: US)
+- `--max-price <cents>` — Maximum price in cents (e.g., `1000` = $10.00). **Required** for URL-based products.
+
+**Important Notes:**
+
+⚠️ **URL Format:** Use the **full Amazon URL**, not abbreviated links (like `a.co/...`). Full URLs look like:
+- ✅ `https://www.amazon.com/dp/B0CJ44HMBF?th=1`
+- ❌ `https://a.co/d/0ewxA3W7` (abbreviated links won't work)
+
+⚠️ **Max Price:** For Amazon/Shopify products, `--max-price` is required. Enter the amount in cents:
+  - `$5.00` → `--max-price 500`
+  - `$10.00` → `--max-price 1000`
+  - `$25.50` → `--max-price 2550`
 
 **How it works:**
 1. Sends product URL and shipping info to Purch.xyz
