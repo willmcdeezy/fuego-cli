@@ -359,7 +359,7 @@ fuego jupiter swap 10 --input USDC --output <mint-address> --yes
 
 ### `fuego purch <product-url>`
 
-Purchase products via x402/Purch.xyz (Amazon, Shopify, etc.) using USDC on Solana.
+Purchase products via x402/Purch.xyz (Amazon) using USDC on Solana.
 
 ```bash
 # Purchase from Amazon
